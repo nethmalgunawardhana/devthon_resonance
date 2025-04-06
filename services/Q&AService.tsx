@@ -48,8 +48,8 @@ export const api = {
         return response.data.data;
       } else {
         // If for some reason the API directly returns the question object
-        if (response.data.id) {
-          return response.data as Question;
+        if ('id' in response.data) {
+          return response.data as unknown as Question;
         }
         throw new Error(`Invalid data format received for question ${questionId}`);
       }
@@ -64,8 +64,8 @@ export const api = {
       const response = await axios.post<ApiResponse<Question>>(`${API_BASE_URL}/questions/${questionId}/vote`, { value });
       if (response.data.success && response.data.data) {
         return response.data.data;
-      } else if (response.data.id) {
-        return response.data as Question;
+      } else if ('id' in response.data) {
+        return response.data as unknown as Question;
       }
       throw new Error(`Invalid data format received when voting on question ${questionId}`);
     } catch (error) {
@@ -79,8 +79,8 @@ export const api = {
       const response = await axios.post<ApiResponse<Question>>(`${API_BASE_URL}/questions`, questionData);
       if (response.data.success && response.data.data) {
         return response.data.data;
-      } else if (response.data.id) {
-        return response.data as Question;
+      } else if ('id' in response.data) {
+        return response.data as unknown as Question;
       }
       throw new Error('Invalid data format received when creating question');
     } catch (error) {
@@ -109,8 +109,8 @@ export const api = {
       const response = await axios.post<ApiResponse<any>>(`${API_BASE_URL}/questions/${questionId}/answers`, answerData);
       if (response.data.success && response.data.data) {
         return response.data.data;
-      } else if (response.data.id) {
-        return response.data;
+      } else if ('id' in response.data) {
+        return response.data as unknown as any;
       }
       throw new Error(`Invalid data format received when creating answer for question ${questionId}`);
     } catch (error) {
