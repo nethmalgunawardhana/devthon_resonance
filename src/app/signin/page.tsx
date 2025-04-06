@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth, db } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { auth } from '@/firebase';
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 
@@ -15,17 +14,14 @@ export default function SignIn() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        const docSnap = await getDoc(doc(db, "users", user.uid));
-        if (docSnap.exists()) {
-          const userRole = docSnap.data().role || 'researcher';
-          router.push(`/dashboard/${userRole.toLowerCase().replace(" ", "")}`);
-        }
+        console.log('User is signed in:', user.email);
+        // Update state or perform other actions if needed
       }
     });
-    return () => unsubscribe();
-  }, [router]);
+    return () => unsubscribe(); // Cleanup the listener on unmount
+  }, []);
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -34,19 +30,19 @@ export default function SignIn() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.username || !form.password) {
-      setError("Please fill in all fields");
+      setError('Please fill in all fields');
       return;
     }
     try {
-      const email = form.username + "@resonance.com";
+      const email = form.username + '@resonance.com';
       await signInWithEmailAndPassword(auth, email, form.password);
       router.push('/');
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
-        setError(err.message || "Invalid credentials");
+        setError(err.message || 'Invalid credentials');
       } else {
-        setError("An unexpected error occurred");
+        setError('An unexpected error occurred');
       }
     }
   };
@@ -59,7 +55,7 @@ export default function SignIn() {
     } catch (err) {
       if (err instanceof Error) {
         console.error(err);
-        setError("Google Sign-In failed");
+        setError('Google Sign-In failed');
       }
     }
   };

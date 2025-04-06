@@ -11,18 +11,8 @@ export default function Navbar() {
   const [username, setUsername] = useState<string | null>(null);
   const router = useRouter();
 
-  // Check authentication state on page load and listen for changes
+  // Listen for authentication state changes
   useEffect(() => {
-    // Check the current user immediately on load
-    const user = auth.currentUser;
-    if (user) {
-      setIsSignedIn(true);
-      const email = user.email || '';
-      const extractedUsername = email.split('@')[0];
-      setUsername(user.displayName || extractedUsername);
-    }
-
-    // Listen for authentication state changes
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setIsSignedIn(true);

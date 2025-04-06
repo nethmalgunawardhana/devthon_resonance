@@ -64,8 +64,7 @@ export default function SignUp() {
       });
   
 
-      const rolePath = role.toLowerCase().replace(' ', '');
-      redirectToHomepage();
+      router.push('/');
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Something went wrong");
@@ -87,7 +86,7 @@ export default function SignUp() {
         role,
       });
 
-      redirectToDashboard(role);
+      redirectToHomepage();
     } catch (err: any) {
       alert(err.message);
     }
@@ -97,10 +96,6 @@ export default function SignUp() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   
-
-  const redirectToDashboard = (role: string) => {
-    router.push(`/dashboard/${role}`);
-  };
 
   return (
     <div className="min-h-screen flex">
