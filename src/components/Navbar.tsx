@@ -73,12 +73,15 @@ export default function Navbar() {
             <>
               <FiBell className="text-gray-800 text-xl cursor-pointer hover:text-[#770C0C]" />
               <FiBookmark className="text-gray-800 text-xl cursor-pointer hover:text-[#770C0C]" />
-              <div className="flex items-center space-x-2 cursor-pointer">
-                <FiUser className="text-gray-800 text-xl hover:text-[#770C0C]" />
-                <span className="text-sm font-medium text-gray-800 hover:text-[#770C0C]">
-                  {username}
+              <Link
+                href="/userProfile"
+                className="flex items-center space-x-2 cursor-pointer hover:text-[#770C0C] transition"
+            >
+                <FiUser className="text-gray-800 text-xl" />
+                <span className="text-sm font-medium text-gray-800">
+                {username}
                 </span>
-              </div>
+              </Link>
               <button
                 onClick={handleSignOut}
                 className="bg-[#770C0C] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#5d0a0a] transition"
