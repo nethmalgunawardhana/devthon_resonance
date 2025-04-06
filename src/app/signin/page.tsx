@@ -1,75 +1,136 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';  // Use modular imports
-import { initializeApp } from 'firebase/app'; // Firebase initialization
-//import { firebaseConfig } from '@/firebase'; // Import your Firebase config
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '@/firebase';
+import Image from 'next/image';
+import { FcGoogle } from 'react-icons/fc';
 
-// Initialize Firebase
-//const app = initializeApp(firebaseConfig);
-//const auth = getAuth(app);
-
-const SignIn = () => {
+export default function SignIn() {
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log('User is signed in:', user.email);
+      }
+    });
+    return () => unsubscribe(); // Cleanup the listener on unmount
+  }, []);
+
+  const handleChange = (e: any) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!form.username || !form.password) {
+      setError('Please fill in all fields');
+      return;
+    }
+    setLoading(true); // Start loading
     try {
-      //await signInWithEmailAndPassword(auth, email, password);
-      router.push('/dashboard');  // Redirect to the dashboard after login
+      const email = form.username + '@resonance.com';
+      await signInWithEmailAndPassword(auth, email, form.password);
+      router.push('/'); // Redirect to homepage after successful sign-in
     } catch (err) {
-      setError('Failed to sign in. Please check your credentials.');
+      console.error(err);
+      if (err instanceof Error) {
+        setError(err.message || 'Invalid credentials');
+      } else {
+        setError('An unexpected error occurred');
+      }
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true); // Start loading
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      router.push('/'); // Redirect to homepage after successful Google sign-in
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError('Google Sign-In failed');
+      }
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-        <h2 className="text-2xl font-semibold text-center mb-4">Sign In</h2>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        <form onSubmit={handleSignIn}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              id="email"
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md"
-              placeholder="Your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+    <div className="min-h-screen flex">
+      <div className="w-1/2 hidden md:block relative">
+        <Image
+          src="/signin-cover.jpg"
+          alt="Visual"
+          layout="fill"
+          objectFit="cover"
+        />
+      </div>
+      <div className="w-full bg-white md:w-1/2 flex items-center justify-center p-8">
+        <div className="w-full max-w-md space-y-6">
+          <div className="text-center">
+            <Image src="/logo.png" alt="Logo" width={200} height={200} className="mx-auto mb-10" />
+            <h2 className="text-3xl font-semibold text-gray-800">Welcome Back</h2>
+            <p className="text-sm text-gray-500">Sign in to your account</p>
           </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              id="password"
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md"
-              placeholder="Your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-            Sign In
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <div className="text-red-600 text-sm text-center">{error}</div>}
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-800">Username</label>
+              <input
+                type="text"
+                name="username"
+                value={form.username}
+                onChange={handleChange}
+                className="w-full px-3 py-1.5 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-md"
+                placeholder="Enter your username"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-800">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full px-3 py-1.5 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-md"
+                placeholder="Enter your password"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-[#770C0C] text-white py-2 rounded-lg font-semibold hover:bg-[#5d0a0a] transition"
+              disabled={loading} // Disable button while loading
+            >
+              {loading ? 'Signing In...' : 'Sign In'}
+            </button>
+          </form>
+
+          <div className="text-center my-2 text-gray-500">or</div>
+
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            className="w-full border border-gray-300 py-2 rounded-lg text-gray-700 hover:bg-gray-100 flex justify-center items-center gap-2"
+            disabled={loading} // Disable button while loading
+          >
+            {loading ? 'Signing In...' : <><FcGoogle className="text-xl" /> Sign in with Google</>}
           </button>
-        </form>
-        <div className="mt-4 text-center">
-          <p className="text-sm">
-            Don't have an account?{' '}
-            <a href="/signup" className="text-blue-500">Sign up here</a>
-          </p>
         </div>
       </div>
     </div>
   );
-};
-
-export default SignIn;
+}
