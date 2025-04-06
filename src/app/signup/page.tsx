@@ -2,26 +2,14 @@
 
 import { useState } from 'react';
 import { auth, db, googleProvider } from '@/firebase';
-import {
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-} from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
-import { Tab } from '@headlessui/react';
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
-
-const roles = ['Researcher', 'Industry Professional'];
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 export default function SignUp() {
-  const [selectedRoleIndex, setSelectedRoleIndex] = useState(0);
-  const role = roles[selectedRoleIndex].toLowerCase();
-
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -31,74 +19,91 @@ export default function SignUp() {
   });
 
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
   const router = useRouter();
-
-  const redirectToHomepage = () => {
-    router.push('/');
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-  
-    if (form.password !== form.repeatPassword) {
-      setError("Passwords don't match");
+    setLoading(true); // Start loading
+
+    // Validate form fields
+    if (!form.firstName || !form.lastName || !form.username || !form.password || !form.repeatPassword) {
+      setError('All fields are required');
+      setLoading(false);
       return;
     }
+    if (form.password !== form.repeatPassword) {
+      setError("Passwords don't match");
+      setLoading(false);
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        form.username + "@resonance.com", 
+        form.username + '@resonance.com',
         form.password
       );
       const user = userCredential.user;
-  
-      
-      await setDoc(doc(db, "users", user.uid), {
+
+      // Save user data to Firestore
+      await setDoc(doc(db, 'users', user.uid), {
         firstName: form.firstName,
         lastName: form.lastName,
         username: form.username,
-        role: role.toLowerCase(),
         uid: user.uid,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
-  
 
-      router.push('/');
+      router.push('/'); // Redirect to homepage after successful sign-up
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Something went wrong");
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
-  
 
   const handleGoogleSignIn = async () => {
+    setLoading(true); // Start loading
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
+      // Save user data to Firestore
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         firstName: user.displayName?.split(' ')[0] || '',
         lastName: user.displayName?.split(' ')[1] || '',
         username: user.email?.split('@')[0],
         email: user.email,
-        role,
       });
 
-      redirectToHomepage();
+      router.push('/'); // Redirect to homepage
     } catch (err: any) {
-      alert(err.message);
+      console.error(err);
+      setError(err.message || 'Google Sign-In failed');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative">
+      {/* Popup Loader */}
+      {loading && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center">
+            <AiOutlineLoading3Quarters className="text-white text-4xl animate-spin" />
+            <p className="text-white mt-4">Processing...</p>
+          </div>
+        </div>
+      )}
 
       <div className="w-1/2 hidden md:block">
         <img
@@ -115,37 +120,17 @@ export default function SignUp() {
           </div>
           <h2 className="text-3xl font-semibold text-center text-gray-800 mb-4">Create Account</h2>
 
-          <Tab.Group selectedIndex={selectedRoleIndex} onChange={setSelectedRoleIndex}>
-            <Tab.List className="flex justify-around bg-gray-100 rounded-md mb-6 p-1 gap-1">
-              {roles.map((roleName) => (
-                <Tab
-                  key={roleName}
-                  className={({ selected }) =>
-                    classNames(
-                      'w-full py-2 text-sm font-medium rounded-md',
-                      selected
-                        ? 'bg-white text-[#770C0C]'
-                        : 'text-gray-700 hover:bg-gray-200'
-                    )
-                  }
-                >
-                  {roleName}
-                </Tab>
-              ))}
-            </Tab.List>
-          </Tab.Group>
-
-
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <div className="text-red-600 text-sm text-center">{error}</div>}
+
             <div>
               <label className="block pb-1.5 text-sm text-gray-800">First Name</label>
               <input
                 type="text"
                 name="firstName"
-                placeholder="Tharin"
+                placeholder="Enter your first name"
                 value={form.firstName}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-1.5 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-md"
               />
             </div>
@@ -154,10 +139,9 @@ export default function SignUp() {
               <input
                 type="text"
                 name="lastName"
-                placeholder="Edirisinghe"
+                placeholder="Enter your last name"
                 value={form.lastName}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-1.5 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-md"
               />
             </div>
@@ -166,10 +150,9 @@ export default function SignUp() {
               <input
                 type="text"
                 name="username"
-                placeholder="tharinEdiri"
+                placeholder="Enter your username"
                 value={form.username}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-1.5 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-md"
               />
             </div>
@@ -181,7 +164,6 @@ export default function SignUp() {
                 placeholder="Enter your password"
                 value={form.password}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-1.5 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-md"
               />
             </div>
@@ -193,7 +175,6 @@ export default function SignUp() {
                 placeholder="Repeat your password"
                 value={form.repeatPassword}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-1.5 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-md"
               />
             </div>
@@ -201,8 +182,9 @@ export default function SignUp() {
             <button
               type="submit"
               className="w-full bg-[#770C0C] text-white py-2 rounded-lg font-semibold hover:bg-[#5d0a0a] transition"
+              disabled={loading} // Disable button while loading
             >
-              Sign Up
+              {loading ? 'Signing Up...' : 'Sign Up'}
             </button>
           </form>
 
@@ -211,9 +193,9 @@ export default function SignUp() {
           <button
             onClick={handleGoogleSignIn}
             className="w-full border border-gray-300 py-2 rounded-lg text-gray-700 hover:bg-gray-100 flex justify-center items-center gap-2"
+            disabled={loading} // Disable button while loading
           >
-            <FcGoogle size={22} />
-            Sign in with Google
+            {loading ? 'Signing Up...' : <><FcGoogle size={22} /> Sign in with Google</>}
           </button>
 
           <p className="text-center text-sm text-gray-600 mt-4">

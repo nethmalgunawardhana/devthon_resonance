@@ -12,12 +12,12 @@ export default function SignIn() {
 
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         console.log('User is signed in:', user.email);
-        // Update state or perform other actions if needed
       }
     });
     return () => unsubscribe(); // Cleanup the listener on unmount
@@ -33,10 +33,11 @@ export default function SignIn() {
       setError('Please fill in all fields');
       return;
     }
+    setLoading(true); // Start loading
     try {
       const email = form.username + '@resonance.com';
       await signInWithEmailAndPassword(auth, email, form.password);
-      router.push('/');
+      router.push('/'); // Redirect to homepage after successful sign-in
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
@@ -44,19 +45,24 @@ export default function SignIn() {
       } else {
         setError('An unexpected error occurred');
       }
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   const handleGoogleSignIn = async () => {
+    setLoading(true); // Start loading
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      router.push('/');
+      router.push('/'); // Redirect to homepage after successful Google sign-in
     } catch (err) {
       if (err instanceof Error) {
         console.error(err);
         setError('Google Sign-In failed');
       }
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -107,8 +113,9 @@ export default function SignIn() {
             <button
               type="submit"
               className="w-full bg-[#770C0C] text-white py-2 rounded-lg font-semibold hover:bg-[#5d0a0a] transition"
+              disabled={loading} // Disable button while loading
             >
-              Sign In
+              {loading ? 'Signing In...' : 'Sign In'}
             </button>
           </form>
 
@@ -118,9 +125,9 @@ export default function SignIn() {
             type="button"
             onClick={handleGoogleSignIn}
             className="w-full border border-gray-300 py-2 rounded-lg text-gray-700 hover:bg-gray-100 flex justify-center items-center gap-2"
+            disabled={loading} // Disable button while loading
           >
-            <FcGoogle className="text-xl" />
-            Sign in with Google
+            {loading ? 'Signing In...' : <><FcGoogle className="text-xl" /> Sign in with Google</>}
           </button>
         </div>
       </div>
