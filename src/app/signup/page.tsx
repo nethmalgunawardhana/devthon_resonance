@@ -16,7 +16,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-const roles = ['Researcher', 'Contributor', 'Industry'];
+const roles = ['Researcher', 'Industry Professional'];
 
 export default function SignUp() {
   const [selectedRoleIndex, setSelectedRoleIndex] = useState(0);
@@ -30,44 +30,46 @@ export default function SignUp() {
     repeatPassword: '',
   });
 
+  const [error, setError] = useState('');
   const router = useRouter();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setError('');
+  
     if (form.password !== form.repeatPassword) {
-      alert('Passwords do not match');
+      setError("Passwords don't match");
       return;
     }
-
+  
     try {
-      const email = `${form.username}@resonance.com`;
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
+        form.username + "@resonance.com", 
         form.password
       );
-
       const user = userCredential.user;
-
-      await setDoc(doc(db, 'users', user.uid), {
-        uid: user.uid,
+  
+      
+      await setDoc(doc(db, "users", user.uid), {
         firstName: form.firstName,
         lastName: form.lastName,
         username: form.username,
-        email,
-        role,
+        role: role.toLowerCase(),
+        uid: user.uid,
+        createdAt: new Date()
       });
+  
 
-      redirectToDashboard(role);
+      const rolePath = role.toLowerCase().replace(' ', '');
+      router.push(`/dashboard/${rolePath}`);
     } catch (err: any) {
-      alert(err.message);
+      console.error(err);
+      setError(err.message || "Something went wrong");
     }
   };
+  
 
   const handleGoogleSignIn = async () => {
     try {
@@ -88,6 +90,11 @@ export default function SignUp() {
       alert(err.message);
     }
   };
+
+  const handleChange = (e: any) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+  
 
   const redirectToDashboard = (role: string) => {
     router.push(`/dashboard/${role}`);
@@ -131,7 +138,7 @@ export default function SignUp() {
             </Tab.List>
           </Tab.Group>
 
-          {/* Form */}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block pb-1.5 text-sm text-gray-800">First Name</label>
