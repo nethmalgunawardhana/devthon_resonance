@@ -6,6 +6,7 @@ interface Question {
   content: string;
   votes: number;
   answers: number;
+  category?: string;
   userName: string;
   userAvatar: string;
   createdAt: string;
