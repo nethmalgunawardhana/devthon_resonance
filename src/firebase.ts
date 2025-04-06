@@ -5,12 +5,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBxqwRjrvRCF8UKDJvULapHVG4-AEdxxe8",
-  authDomain: "resonance-8a5f1.firebaseapp.com",
-  projectId: "resonance-8a5f1",
-  storageBucket: "resonance-8a5f1.firebasestorage.app",
-  messagingSenderId: "185678832302",
-  appId: "1:185678832302:web:342484c29405b63b74833f"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 };
 
 const app = initializeApp(firebaseConfig);
