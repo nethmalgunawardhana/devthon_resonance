@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ThumbsUp, ThumbsDown, MessageCircle, ArrowLeft, Award, Clock, MessageSquare } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, ArrowLeft, Award, Clock, MessageSquare } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { api } from '../../../../services/Q&AService';
 import Link from 'next/link';
@@ -124,12 +124,11 @@ export default function QuestionDetailPage() {
       <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="bg-red-50 p-2 rounded-full group-hover:bg-red-100 transition-colors">
-                <MessageCircle className="h-6 w-6 text-red-800" />
-              </div>
-              <h1 className="text-2xl font-bold text-red-800">Resonance</h1>
-            </Link>
+          <Link href="/">
+            <div className="flex items-center cursor-pointer">
+              <img src="/logo.png" alt="Resonance Logo" className="h-8 mr-2" />
+            </div>
+          </Link>
           </div>
         </div>
       </header>

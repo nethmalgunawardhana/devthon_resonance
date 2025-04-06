@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect} from 'react';
-import { MessageCircle, ThumbsUp, ThumbsDown, Award, Search, Filter, TrendingUp, SearchIcon, Loader, X } from 'lucide-react';
+import { MessageCircle, ThumbsUp, ThumbsDown, Award, Search, Filter, TrendingUp, Loader, X } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { api } from '../../../services/Q&AService';
 import Link from 'next/link';
@@ -158,16 +158,9 @@ export default function QuestionsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse flex space-x-4">
-          <div className="rounded-full bg-gray-200 h-12 w-12"></div>
-          <div className="flex-1 space-y-4 py-1">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="space-y-2">
-              <div className="h-4 bg-gray-200 rounded"></div>
-              <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-            </div>
-          </div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white">
+        <div className="relative h-16 w-16 mb-4">
+            <Loader className="h-16 w-16 text-red-800 animate-spin" />
         </div>
       </div>
     );
@@ -210,10 +203,11 @@ export default function QuestionsPage() {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3">
-              <SearchIcon className="h-8 w-8 text-red-800" />
-              <h1 className="text-2xl font-bold text-red-800">Resonance</h1>
-            </Link>
+          <Link href="/">
+            <div className="flex items-center cursor-pointer">
+              <img src="/logo.png" alt="Resonance Logo" className="h-8 mr-2" />
+            </div>
+          </Link>
             <form onSubmit={handleSearch} className="relative flex-1 max-w-lg mx-8">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-900 h-5 w-5" />
               <input

@@ -58,12 +58,11 @@ export default function AskQuestionPage() {
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="bg-red-800 rounded-full p-2 group-hover:bg-red-900 transition-all">
-                <ArrowLeft className="h-5 w-5 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-red-800">Resonance</h1>
-            </Link>
+          <Link href="/">
+            <div className="flex items-center cursor-pointer">
+              <img src="/logo.png" alt="Resonance Logo" className="h-8 mr-2" />
+            </div>
+          </Link>
           </div>
         </div>
       </header>
