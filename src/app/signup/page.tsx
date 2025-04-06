@@ -50,7 +50,7 @@ export default function SignUp() {
       const user = userCredential.user;
 
       // Save user data to Firestore
-      await setDoc(doc(db, 'users', user.uid), {
+      await setDoc(doc(db, 'researches', user.uid), {
         firstName: form.firstName,
         lastName: form.lastName,
         username: form.username,
@@ -75,7 +75,7 @@ export default function SignUp() {
       const user = result.user;
   
     
-      const userRef = doc(db, 'users', user.uid);
+      const userRef = doc(db, 'researches', user.uid);
       
       try {
       
