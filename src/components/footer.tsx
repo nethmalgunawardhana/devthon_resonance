@@ -1,45 +1,130 @@
-// components/Footer.tsx
+"use client";
+
+import Link from "next/link";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaYoutube,
+  FaApple,
+  FaGooglePlay,
+} from "react-icons/fa";
+
 export default function Footer() {
   return (
-    <footer className="bg-black text-white px-8 py-10 text-sm">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-gray-900 text-white py-12">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">
+        {/* Logo and Description */}
         <div>
-          <div className="text-2xl font-bold text-red-700 mb-2">Resonance</div>
-          <p>Aliquam rhoncus ligula est, non pulvinar elit convallis nec. Donec mattis odio at.</p>
-          <div className="flex space-x-2 mt-4">
-            <button className="bg-gray-800 p-2 rounded">📘</button>
-            <button className="bg-gray-800 p-2 rounded">📷</button>
-            <button className="bg-gray-800 p-2 rounded">🔗</button>
-            <button className="bg-gray-800 p-2 rounded">▶️</button>
+          <div className="flex items-center mb-4">
+            <img
+              src="/logo-white.png"
+              alt="Resonance Logo"
+              className="h-8 mr-2"
+            />
+          </div>
+          <p className="text-gray-400">
+            Breakthrough science through collaboration
+          </p>
+          <div className="flex space-x-4 mt-4">
+            <FaFacebookF className="text-gray-400 hover:text-white cursor-pointer" />
+            <FaInstagram className="text-gray-400 hover:text-white cursor-pointer" />
+            <FaLinkedinIn className="text-gray-400 hover:text-white cursor-pointer" />
+            <FaYoutube className="text-gray-400 hover:text-white cursor-pointer" />
           </div>
         </div>
+
+        {/* Quick Links */}
         <div>
-          <h4 className="font-semibold mb-2">Quick Links</h4>
-          <ul className="space-y-1">
-            <li><a href="/" className="hover:underline">Home</a></li>
-            <li><a href="/become-researcher" className="hover:underline">Become Researcher</a></li>
-            <li><a href="/contact" className="hover:underline">Contact</a></li>
-            <li><a href="/about" className="hover:underline">About</a></li>
+          <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+          <ul className="space-y-2">
+            <li>
+              <Link href="/" className="text-gray-400 hover:text-white">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/become-researcher"
+                className="text-gray-400 hover:text-white"
+              >
+                Become Researcher
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="text-gray-400 hover:text-white">
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" className="text-gray-400 hover:text-white">
+                About
+              </Link>
+            </li>
           </ul>
         </div>
+
+        {/* Support */}
         <div>
-          <h4 className="font-semibold mb-2">Support</h4>
-          <ul className="space-y-1">
-            <li><a href="#" className="hover:underline">Help Center</a></li>
-            <li><a href="#" className="hover:underline">FAQs</a></li>
-            <li><a href="#" className="hover:underline">Terms & Conditions</a></li>
-            <li><a href="#" className="hover:underline">Privacy Policy</a></li>
+          <h3 className="text-lg font-semibold mb-4">Support</h3>
+          <ul className="space-y-2">
+            <li>
+              <Link
+                href="/help-center"
+                className="text-gray-400 hover:text-white"
+              >
+                Help Center
+              </Link>
+            </li>
+            <li>
+              <Link href="/faqs" className="text-gray-400 hover:text-white">
+                FAQs
+              </Link>
+            </li>
+            <li>
+              <Link href="/terms" className="text-gray-400 hover:text-white">
+                Terms & Condition
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/privacy-policy"
+                className="text-gray-400 hover:text-white"
+              >
+                Privacy Policy
+              </Link>
+            </li>
           </ul>
         </div>
+
+        {/* Download Our App */}
         <div>
-          <h4 className="font-semibold mb-2">Download Our App</h4>
-          <div className="space-y-2">
-            <button className="bg-gray-800 p-2 w-full text-left rounded">App Store</button>
-            <button className="bg-gray-800 p-2 w-full text-left rounded">Play Store</button>
+          <h3 className="text-lg font-semibold mb-4">Download Our App</h3>
+          <div className="space-y-4">
+            <button className="flex items-center bg-gray-800 text-white py-2 px-5 hover:bg-gray-700 transition">
+              <FaApple className="text-2xl mr-3" />
+              <div className="text-left">
+                <p className="text-xs text-gray-400">Download now</p>
+                <p className="text-md font-medium">App Store</p>
+              </div>
+            </button>
+
+            {/* Play Store Button */}
+            <button className="flex items-center bg-gray-800 text-white py-2 px-5 hover:bg-gray-700 transition">
+              <FaGooglePlay className="text-2xl mr-3" />
+              <div className="text-left">
+                <p className="text-xs text-gray-400">Download now</p>
+                <p className="text-md font-medium">Play Store</p>
+              </div>
+            </button>
           </div>
         </div>
       </div>
-      <div className="text-center text-gray-500 mt-8">© 2025 - Designed by VirtualKnights. All rights reserved.</div>
+
+      {/* Bottom Footer */}
+      <div className="border-t border-gray-700 mt-8 pt-4 text-center text-gray-400">
+        <p>© 2025 - Designed by VirtualKnights. All rights reserved.</p>
+      </div>
     </footer>
   );
 }
