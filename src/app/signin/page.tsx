@@ -39,14 +39,8 @@ export default function SignIn() {
     }
     try {
       const email = form.username + "@resonance.com";
-      const res = await signInWithEmailAndPassword(auth, email, form.password);
-      const docSnap = await getDoc(doc(db, "users", res.user.uid));
-      if (docSnap.exists()) {
-        const userRole = docSnap.data().role || 'researcher';
-        router.push(`/dashboard/${userRole.toLowerCase().replace(" ", "")}`);
-      } else {
-        setError("User data not found");
-      }
+      await signInWithEmailAndPassword(auth, email, form.password);
+      router.push('/');
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
@@ -60,18 +54,8 @@ export default function SignIn() {
   const handleGoogleSignIn = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const userRole = docSnap.data().role || "researcher";
-        router.push(`/dashboard/${userRole.toLowerCase().replace(" ", "")}`);
-      } else {
-        setError("No user data found. Please sign up first.");
-      }
+      await signInWithPopup(auth, provider);
+      router.push('/');
     } catch (err) {
       if (err instanceof Error) {
         console.error(err);

@@ -33,6 +33,10 @@ export default function SignUp() {
   const [error, setError] = useState('');
   const router = useRouter();
 
+  const redirectToHomepage = () => {
+    router.push('/');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -41,9 +45,7 @@ export default function SignUp() {
       setError("Passwords don't match");
       return;
     }
-  
     try {
-
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         form.username + "@resonance.com", 
@@ -63,7 +65,7 @@ export default function SignUp() {
   
 
       const rolePath = role.toLowerCase().replace(' ', '');
-      router.push(`/dashboard/${rolePath}`);
+      redirectToHomepage();
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Something went wrong");
