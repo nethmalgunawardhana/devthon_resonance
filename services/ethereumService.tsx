@@ -1,5 +1,7 @@
-// services/ethereumService.ts
 import { ethers } from "ethers";
+
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 // Get the Ethereum object from the window (MetaMask)
 export const getEthereumObject = () => {
@@ -42,9 +44,18 @@ export const fundProject = async (projectId: number, amountEth: string) => {
 
     const receipt = await tx.wait(); // Wait for the transaction confirmation
 
+    console.log(receipt);
+
+    await saveFundingTransaction(
+      receipt.hash,
+      projectId,
+      "idv1cptGCY8IiBT55Joh",
+      amountEth
+    );
+
     return {
       success: true,
-      transactionHash: receipt.transactionHash,
+      transactionHash: receipt.hash,
     };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
@@ -52,3 +63,30 @@ export const fundProject = async (projectId: number, amountEth: string) => {
     throw new Error(err.message || "Funding failed");
   }
 };
+
+
+const saveFundingTransaction = async (
+    transactionHash: string,
+    fundingProjectId: number,
+    projectDocId: string = "idv1cptGCY8IiBT55Joh",
+    amountEth: string
+    ) => {
+    try {
+        const response = await fetch(`${API_URL}/api/blockchain/fund-project`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+         body: JSON.stringify({ projectDocId, fundingProjectId, transactionHash, amountEth }),
+        }); 
+    
+        if (!response.ok) {
+        throw new Error("Failed to save funding transaction");
+        }
+    
+        return await response.json();
+    } catch (error) {
+        console.error("Error saving funding transaction:", error);
+        throw error;
+    }
+    }
