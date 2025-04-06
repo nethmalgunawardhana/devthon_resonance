@@ -7,6 +7,7 @@ import { api } from '../../../services/Q&AService';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Question } from '../../types/Q&A';
+import Chatbot from '@/components/Chatbot';
 
 export default function QuestionsPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -439,7 +440,10 @@ export default function QuestionsPage() {
                     </div>
                   ))}
                   
-                  
+                  <div className="flex justify-center mt-6">
+                    <Chatbot />
+                    </div>
+
                 </div>
               )}
             </div>
