@@ -4,16 +4,18 @@ import Modal from '../research/modal';
 import { Loader2 } from 'lucide-react'; 
 
 interface Researcher {
-  _id: string;
+  uid: string; // Changed from _id to uid
   firstName: string;
   email: string;
+  specialization?: string;
+  institution?: string;
 }
 
 interface CollaborativeData {
   allowCollaboratorRequests: boolean;
   allowUnlistedSkills: boolean;
   requestedSkills: string[];
-  team: string[];
+  team: string[]; // Storing researcher UIDs instead of IDs
 }
 
 interface CollaborativeOpportunitiesProps {
@@ -40,6 +42,9 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
   const [selectedResearcher, setSelectedResearcher] = useState('');
   const [isPublishing, setIsPublishing] = useState(false);
   
+  // For display purposes - mapping UIDs to researcher information
+  const [teamDisplay, setTeamDisplay] = useState<{uid: string, display: string}[]>([]);
+  
   // State for researcher creation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newResearcher, setNewResearcher] = useState({ firstName: '', email: '', specialization: '', institution: '' });
@@ -49,11 +54,34 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
     fetchResearchers();
   }, []);
 
+  // Update teamDisplay whenever team or researchers change
+  useEffect(() => {
+    updateTeamDisplay();
+  }, [data.team, researchers]);
+
+  const updateTeamDisplay = () => {
+    const display = data.team.map(uid => {
+      const researcher = researchers.find(r => r.uid === uid);
+      return {
+        uid,
+        display: researcher ? `${researcher.firstName} (${researcher.email})` : uid
+      };
+    });
+    setTeamDisplay(display);
+  };
+
   const fetchResearchers = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/researchers`);
       const data = await response.json();
+      
+      // Log the researcher data with their UIDs
+      console.log('Fetched researchers:', data);
+      data.forEach(researcher => {
+        console.log(`Researcher: ${researcher.firstName}, ID: ${researcher.uid}`);
+      });
+      
       setResearchers(data);
     } catch (error) {
       console.error('Error fetching researchers:', error);
@@ -77,28 +105,49 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
     onChange({ requestedSkills: [...data.requestedSkills, ''] });
   };
 
-  const handleAddResearcher = () => {
+  const handleAddResearcher = async () => {
     if (researcher && researcherEmail) {
-      const newTeamMember = `${researcher} (${researcherEmail})`;
-      onChange({ team: [...data.team, newTeamMember] });
-      setResearcher('');
-      setResearcherEmail('');
+      try {
+        setIsLoading(true);
+        // Create a new researcher and get their UID
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/researchers`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName: researcher,
+            email: researcherEmail
+          }),
+        });
+        
+        if (response.ok) {
+          const newResearcherData = await response.json();
+          // Add the researcher UID to the team
+          onChange({ team: [...data.team, newResearcherData.uid] });
+          // Add to researchers list for display
+          setResearchers([...researchers, newResearcherData]);
+          // Reset form fields
+          setResearcher('');
+          setResearcherEmail('');
+        }
+      } catch (error) {
+        console.error('Error adding researcher:', error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   const handleSelectResearcher = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const researcherId = e.target.value;
-    if (!researcherId) return;
+    const researcherUid = e.target.value;
+    if (!researcherUid) return;
     
-    const selected = researchers.find(r => r._id === researcherId);
-    if (selected) {
-      const newTeamMember = `${selected.firstName} (${selected.email})`;
-      // Check if researcher is already in team
-      if (!data.team.includes(newTeamMember)) {
-        onChange({ team: [...data.team, newTeamMember] });
-      }
-      setSelectedResearcher('');
+    // Check if researcher UID is already in team
+    if (!data.team.includes(researcherUid)) {
+      onChange({ team: [...data.team, researcherUid] });
     }
+    setSelectedResearcher('');
   };
 
   const handleRemoveTeamMember = (index: number) => {
@@ -122,11 +171,11 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
       
       if (response.ok) {
         const createdResearcher = await response.json();
+        // Add the researcher to our list
         setResearchers([...researchers, createdResearcher]);
         
-        // Add the newly created researcher to the team
-        const newTeamMember = `${createdResearcher.name} (${createdResearcher.email})`;
-        onChange({ team: [...data.team, newTeamMember] });
+        // Add the researcher UID to the team
+        onChange({ team: [...data.team, createdResearcher.uid] });
         
         // Reset form and close modal
         setNewResearcher({ firstName: '', email: '', specialization: '', institution: '' });
@@ -252,7 +301,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
               >
                 <option value="">Search and add researchers you have connected with ...</option>
                 {researchers.map((r) => (
-                  <option key={r._id} value={r._id}>
+                  <option key={r.uid} value={r.uid}>
                     {r.firstName} ({r.email})
                   </option>
                 ))}
@@ -309,25 +358,32 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
               <button
                 type="button"
                 onClick={handleAddResearcher}
-                disabled={!researcher || !researcherEmail}
+                disabled={!researcher || !researcherEmail || isLoading}
                 className={`px-4 py-2 rounded-md ${
-                  researcher && researcherEmail
+                  researcher && researcherEmail && !isLoading
                     ? 'bg-red-800 text-white hover:bg-red-900'
                     : 'bg-red-300 text-white cursor-not-allowed'
                 }`}
               >
-                Add Researcher
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin inline" />
+                    Adding...
+                  </>
+                ) : (
+                  'Add Researcher'
+                )}
               </button>
             </div>
           )}
 
-          {data.team.length > 0 && (
+          {teamDisplay.length > 0 && (
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-gray-700">Added Researchers:</h4>
               <ul className="list-disc pl-5 text-sm">
-                {data.team.map((member, index) => (
+                {teamDisplay.map((member, index) => (
                   <li key={index} className="flex text-pink-950 justify-between items-center pb-1">
-                    <span>{member}</span>
+                    <span>{member.display}</span>
                     <button 
                       type="button" 
                       onClick={() => handleRemoveTeamMember(index)}

@@ -115,7 +115,9 @@ const ResearchCreate: React.FC = () => {
       const newCollaborativeInfo = { ...prev.collaborativeInfo };
     
       if (data.team) {
-        newCollaborativeInfo.team = [...data.team];
+  
+        newCollaborativeInfo.team = data.team;
+        console.log("Updated team data:", newCollaborativeInfo.team);
       }
  
       if (data.allowCollaboratorRequests !== undefined) {

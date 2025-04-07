@@ -7,7 +7,6 @@ export const researchService = {
   async createResearch(data: ResearchFormData): Promise<any> {
     const formData = new FormData();
     
-
     formData.append('userId', data.userId);
     
     // Add basic info
@@ -34,7 +33,7 @@ export const researchService = {
     formData.append('allowCollaboratorRequests', data.collaborativeInfo.allowCollaboratorRequests.toString());
     formData.append('allowUnlistedSkills', data.collaborativeInfo.allowUnlistedSkills.toString());
     
-  
+    // For requestedSkills with proper handling for empty values
     if (data.collaborativeInfo.requestedSkills.length === 0) {
       formData.append('requestedSkills', JSON.stringify([]));
     } else {
@@ -43,14 +42,10 @@ export const researchService = {
       });
     }
     
-    // For team with proper handling for empty values
-    if (data.collaborativeInfo.team.length === 0) {
-      formData.append('team', JSON.stringify([]));
-    } else {
-      data.collaborativeInfo.team.forEach((member, index) => {
-        formData.append(`team[${index}]`, member);
-      });
-    }
+    // For team - now sending array of researcher UIDs
+    formData.append('team', JSON.stringify(data.collaborativeInfo.team));
+
+
     
     const response = await axios.post(`${API_BASE_URL}/research`, formData, {
       headers: {
@@ -65,7 +60,6 @@ export const researchService = {
     const formData = new FormData();
 
     formData.append('userId', data.userId);
- 
     formData.append('isDraft', 'true');
     
     // Add basic info
@@ -92,7 +86,7 @@ export const researchService = {
     formData.append('allowCollaboratorRequests', data.collaborativeInfo.allowCollaboratorRequests.toString());
     formData.append('allowUnlistedSkills', data.collaborativeInfo.allowUnlistedSkills.toString());
     
-
+    // For requestedSkills with proper handling for empty values
     if (data.collaborativeInfo.requestedSkills.length === 0) {
       formData.append('requestedSkills', JSON.stringify([]));
     } else {
@@ -101,14 +95,7 @@ export const researchService = {
       });
     }
     
-    // For team with proper handling for empty values
-    if (data.collaborativeInfo.team.length === 0) {
-      formData.append('team', JSON.stringify([]));
-    } else {
-      data.collaborativeInfo.team.forEach((member, index) => {
-        formData.append(`team[${index}]`, member);
-      });
-    }
+   formData.append('team', data.collaborativeInfo.team.length === 0 ? JSON.stringify([]) : JSON.stringify(data.collaborativeInfo.team));
     
     const response = await axios.post(`${API_BASE_URL}/research/draft`, formData, {
       headers: {
