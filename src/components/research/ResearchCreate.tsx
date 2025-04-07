@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Update import to next/navigation
+import { useRouter } from 'next/navigation';
 import { researchService } from '../../../services/researchService';
 import BasicInformation from './BasicInformation';
 import AdvanceInformation from './AdvanceInformation';
@@ -26,12 +26,14 @@ export type ResearchFormData = {
     requestedSkills: string[];
     team: string[];
   };
+  userId: string; 
 };
 
 const ResearchCreate: React.FC = () => {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [currentStep, setCurrentStep] = useState<number>(1);
+  const [userId, setUserId] = useState<string>('');
   const [formData, setFormData] = useState<ResearchFormData>({
     basicInfo: {
       title: '',
@@ -51,12 +53,27 @@ const ResearchCreate: React.FC = () => {
       requestedSkills: ['', '', ''],
       team: [],
     },
+    userId: '', 
   });
 
-  // Add this useEffect to ensure component is mounted before using router
+  // Ensure component is mounted and get userId from localStorage
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    
+    // Get userId from localStorage
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+      setFormData(prev => ({
+        ...prev,
+        userId: storedUserId
+      }));
+    } else {
+      // Redirect if no userId is found
+      console.error('No user ID found in localStorage');
+      router.push('/signin');
+    }
+  }, [router]);
 
   const handleBasicInfoChange = (data: Partial<ResearchFormData['basicInfo']>) => {
     setFormData((prev) => ({ ...prev, basicInfo: { ...prev.basicInfo, ...data } }));
@@ -66,8 +83,35 @@ const ResearchCreate: React.FC = () => {
     setFormData((prev) => ({ ...prev, advanceInfo: { ...prev.advanceInfo, ...data } }));
   };
 
+  // Fixed handleCollaborativeInfoChange function to properly handle team array updates
   const handleCollaborativeInfoChange = (data: Partial<ResearchFormData['collaborativeInfo']>) => {
-    setFormData((prev) => ({ ...prev, collaborativeInfo: { ...prev.collaborativeInfo, ...data } }));
+    setFormData((prev) => {
+      // Create a new object to avoid reference issues
+      const newCollaborativeInfo = { ...prev.collaborativeInfo };
+      
+      // Handle team array specially to ensure it's properly updated
+      if (data.team) {
+        newCollaborativeInfo.team = [...data.team];
+      }
+      
+      // Handle other fields
+      if (data.allowCollaboratorRequests !== undefined) {
+        newCollaborativeInfo.allowCollaboratorRequests = data.allowCollaboratorRequests;
+      }
+      
+      if (data.allowUnlistedSkills !== undefined) {
+        newCollaborativeInfo.allowUnlistedSkills = data.allowUnlistedSkills;
+      }
+      
+      if (data.requestedSkills) {
+        newCollaborativeInfo.requestedSkills = [...data.requestedSkills];
+      }
+      
+      return { ...prev, collaborativeInfo: newCollaborativeInfo };
+    });
+    
+    // Debug logging to verify state updates
+    console.log("Updated collaborative info data:", data);
   };
 
   const handleNext = async () => {
@@ -75,11 +119,20 @@ const ResearchCreate: React.FC = () => {
       setCurrentStep(currentStep + 1);
     } else {
       try {
-        // Submit the entire form
+        // Ensure we have a userId before submitting
+        if (!formData.userId) {
+          throw new Error('User ID is required');
+        }
+        
+        // Log form data before submission to verify team data
+        console.log("Submitting form data:", formData);
+        
+        // Submit the entire form with userId
         await researchService.createResearch(formData);
         router.push('/dashboard/research');
       } catch (error) {
         console.error('Error creating research:', error);
+        // You might want to add error handling UI here
       }
     }
   };
@@ -92,25 +145,56 @@ const ResearchCreate: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      // Save as draft
+      // Ensure we have a userId before saving
+      if (!formData.userId) {
+        throw new Error('User ID is required');
+      }
+      
+      // Log the data before saving to verify team data
+      console.log("Saving draft with data:", formData);
+      
+      // Save as draft with userId
       await researchService.saveResearchDraft(formData);
     } catch (error) {
       console.error('Error saving draft:', error);
+      // You might want to add error handling UI here
     }
   };
 
   const handleSaveAndPreview = async () => {
     try {
+      // Ensure we have a userId before saving and previewing
+      if (!formData.userId) {
+        throw new Error('User ID is required');
+      }
+      
+      // Log the data before saving and previewing to verify team data
+      console.log("Saving and previewing with data:", formData);
+      
       const savedData = await researchService.saveResearchDraft(formData);
       router.push(`/research/preview/${savedData.id}`);
     } catch (error) {
       console.error('Error saving and previewing:', error);
+      // You might want to add error handling UI here
     }
   };
 
+  // Show loading state or redirect if not client-side or no userId
   if (!isClient) {
     return null; // Return null or a loading state while client-side rendering is not yet available
   }
+
+  // Optional: Return a loading state or redirect if no userId
+  if (!userId) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#770C0C]"></div>
+      </div>
+    );
+  }
+
+  // Debugging: Log the current state of formData to track team updates
+  console.log("Current form data:", formData);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">

@@ -75,7 +75,7 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
   }, []);
 
   useEffect(() => {
-    // Validate form
+    // Validate form - fixed condition for fundingGoal to be greater than 0
     const isFormValid = 
       data.title.trim().length > 0 && 
       data.category.trim().length > 0 && 
@@ -87,7 +87,14 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    onChange({ [name]: name === 'fundingGoal' ? parseFloat(value) : value });
+    
+    if (name === 'fundingGoal') {
+      // Convert to number for the fundingGoal field
+      const numericValue = value === '' ? 0 : parseFloat(value);
+      onChange({ [name]: numericValue });
+    } else {
+      onChange({ [name]: value });
+    }
   };
 
   return (
@@ -159,19 +166,22 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
             <label htmlFor="fundingGoal" className="block text-sm font-medium text-gray-700 mb-1">
               Funding Goal
             </label>
-            <div className="relative">
+            <div className="flex items-center border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-indigo-500 focus-within:border-indigo-500">
               <input
                 type="number"
                 id="fundingGoal"
                 name="fundingGoal"
                 value={data.fundingGoal || ''}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                min="0"
+                step="any"
+                className="flex-1 px-4 py-2 border-none focus:outline-none focus:ring-0"
                 placeholder="Your research funding goal"
+                style={{ appearance: "textfield" }}
               />
-              <span className="absolute right-3 top-2 text-xs text-gray-500">
+              <div className="px-3 py-2 bg-gray-50 text-gray-500 font-medium">
                 USD
-              </span>
+              </div>
             </div>
           </div>
         </div>
@@ -189,7 +199,7 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
           >
             <option value="" disabled>
               Select...
-              </option>
+            </option>
             {languages.map((language) => (
               <option key={language} value={language}>
                 {language}

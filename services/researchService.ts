@@ -7,6 +7,9 @@ export const researchService = {
   async createResearch(data: ResearchFormData): Promise<any> {
     const formData = new FormData();
     
+    // Add userId to the form data
+    formData.append('userId', data.userId);
+    
     // Add basic info
     formData.append('title', data.basicInfo.title);
     formData.append('category', data.basicInfo.category);
@@ -42,7 +45,6 @@ export const researchService = {
     const response = await axios.post(`${API_BASE_URL}/research`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
     
@@ -52,7 +54,10 @@ export const researchService = {
   async saveResearchDraft(data: ResearchFormData): Promise<any> {
     const formData = new FormData();
     
-    // Similar to createResearch but with isDraft flag
+    // Add userId to the form data
+    formData.append('userId', data.userId);
+    
+    // Add isDraft flag
     formData.append('isDraft', 'true');
     
     // Add basic info
@@ -90,7 +95,6 @@ export const researchService = {
     const response = await axios.post(`${API_BASE_URL}/research/draft`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
     
@@ -104,6 +108,21 @@ export const researchService = {
   
   async getLanguages(): Promise<string[]> {
     const response = await axios.get(`${API_BASE_URL}/research/languages`);
+    return response.data;
+  },
+  
+  async getResearchers(): Promise<any[]> {
+    const response = await axios.get(`${API_BASE_URL}/researchers`);
+    return response.data;
+  },
+  
+  async createResearcher(researcherData: {
+    name: string;
+    email: string;
+    specialization?: string;
+    institution?: string;
+  }): Promise<any> {
+    const response = await axios.post(`${API_BASE_URL}/researchers`, researcherData);
     return response.data;
   }
 };

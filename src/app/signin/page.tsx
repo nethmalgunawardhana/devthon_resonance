@@ -3,10 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '@/firebase';
+import { auth, db } from '@/firebase';
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function SignIn() {
   const router = useRouter();
@@ -20,10 +21,47 @@ export default function SignIn() {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         console.log('User is signed in:', user.email);
+        fetchUserDataAndSave(user.uid, user.email || '');
       }
     });
     return () => unsubscribe();
   }, []);
+
+  const fetchUserDataAndSave = async (uid: string, email: string) => {
+    try {
+      // Try to get user data from the 'researches' collection
+      const userDocRef = doc(db, 'researches', uid);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        // Save user data to localStorage
+        localStorage.setItem('userId', uid);
+        localStorage.setItem('userData', JSON.stringify({
+          uid,
+          email,
+          username: userData.username || email.split('@')[0],
+          firstName: userData.firstName || '',
+          lastName: userData.lastName || '',
+          // Include other user data as needed
+        }));
+        console.log('User data saved to localStorage');
+      } else {
+        // If user document doesn't exist, at least save the UID
+        localStorage.setItem('userId', uid);
+        localStorage.setItem('userData', JSON.stringify({
+          uid,
+          email,
+          username: email.split('@')[0],
+        }));
+        console.log('Basic user data saved to localStorage');
+      }
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+      // Still save the uid in case of fetch error
+      localStorage.setItem('userId', uid);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,7 +76,12 @@ export default function SignIn() {
     setLoading(true); 
     try {
       const email = form.username + '@resonance.com';
-      await signInWithEmailAndPassword(auth, email, form.password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, form.password);
+      const user = userCredential.user;
+      
+      // Fetch user data and save to localStorage
+      await fetchUserDataAndSave(user.uid, email);
+      
       router.push('/'); 
     } catch (err) {
       console.error(err);
@@ -56,7 +99,12 @@ export default function SignIn() {
     setLoading(true); 
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      
+      // Fetch user data and save to localStorage
+      await fetchUserDataAndSave(user.uid, user.email || '');
+      
       router.push('/'); 
     } catch (err) {
       if (err instanceof Error) {
