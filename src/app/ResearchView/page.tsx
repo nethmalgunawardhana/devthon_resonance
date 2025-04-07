@@ -7,7 +7,7 @@ import FundingSection from '@/components/FundingSection';
 import { useSearchParams } from 'next/navigation';
 import { fetchResearchProjectById, ResearchProject } from '../../../services/researchService2';
 import { getResearcherById } from '../../../services/researcherIdService';
-
+import { Loader } from 'lucide-react';
 const ResearchView = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
@@ -52,8 +52,11 @@ const ResearchView = () => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <p className="text-gray-500 text-lg">Loading...</p>
-      </motion.div>
+        <div className="flex flex-col items-center">
+          <Loader className="animate-spin h-10 w-10 text-red-900" />
+          <p className="mt-4 text-gray-700">Loading...</p>
+        </div>
+      </motion.div> 
     );
   }
 
