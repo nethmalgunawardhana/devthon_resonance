@@ -7,7 +7,7 @@ import { auth, db } from '@/firebase';
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { collection, doc, getDoc, query, where, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, query, where, getDocs, setDoc } from 'firebase/firestore';
 
 export default function SignIn() {
   const router = useRouter();
@@ -139,8 +139,41 @@ export default function SignIn() {
     setLoading(true); 
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
       
+      const user = result.user;
+  
+      const userRef = doc(db, 'researches', user.uid);
+
+       try {
+        await setDoc(userRef, {
+          uid: user.uid,
+          firstName: user.displayName?.split(' ')[0] || '',
+          lastName: user.displayName?.split(' ')[1] || '',
+          email: user.email,
+          createdAt: new Date(),
+          lastLogin: new Date(), 
+        }, { merge: true });
+
+        router.push('/');
+
+      } catch (firestoreErr) {
+        
+        console.error("Firestore error:", firestoreErr);
+    
+        if (firestoreErr instanceof Error) {
+          if (firestoreErr.message.includes("permission-denied")) {
+            setError("Access denied. Please check your Firestore rules.");
+          } else {
+            setError(`Firestore error: ${firestoreErr.message}`);
+          }
+        } else {
+          setError('Failed to save user data. Please try again.');
+        }
+  
+        return;
+      }
+
       
     } catch (err) {
       console.error(err);
