@@ -162,7 +162,7 @@ const ResearchCreate: React.FC = () => {
         setPublishProgress(100);
    
         setTimeout(() => {
-          
+          router.push('/research/preview'); 
         }, 500);
       } catch (error) {
         console.error('Error creating research:', error);
