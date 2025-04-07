@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import ContentSection from '@/components/ContentSection';
 import FundingSection from '@/components/FundingSection';
 import { useSearchParams } from 'next/navigation';
-import { fetchResearchProjectById, ResearchProject } from '../../../services/researchService';
+import { fetchResearchProjectById, ResearchProject } from '../../../services/researchService2';
 import { getResearcherById } from '../../../services/researcherIdService';
 
 const ResearchView = () => {
