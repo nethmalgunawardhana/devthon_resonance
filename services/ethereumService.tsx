@@ -57,10 +57,23 @@ export const fundProject = async (projectId: number, amountEth: string) => {
       success: true,
       transactionHash: receipt.hash,
     };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("Funding error:", err);
-    throw new Error(err.message || "Funding failed");
+ 
+
+    if (err.code === "INSUFFICIENT_FUNDS") {
+      throw new Error("Insufficient funds to complete the transaction");
+    }
+
+    if (err.code === 4001 || err.code === "ACTION_REJECTED") {
+      throw new Error("Transaction cancelled by user.");
+    }
+
+    if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+      throw new Error("Transaction failed due to unpredictable gas limit");
+    }
+
+    throw new Error("Funding failed for an unknown reason. Please try again.");
   }
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import FundProjectButton from "../../../components/FundProjectButton"; 
+import FundProjectModal from "../../../components/FundProjectModal"; 
 
 export default function FundProjectPage() {
   const [projectId, setProjectId] = useState<number>(1); 
@@ -30,7 +30,7 @@ export default function FundProjectPage() {
         />
       </div>
 
-      <FundProjectButton projectId={projectId} />
+      <FundProjectModal projectId={projectId} />
     </div>
   );
 }
