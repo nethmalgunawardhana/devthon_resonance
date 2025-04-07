@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import FundProjectModal from "../../../components/FundProjectModal"; 
+import TransactionHistoryModal from "@/components/TransactionHistoryModal";
 
 export default function FundProjectPage() {
   const [projectId, setProjectId] = useState<number>(1); 
@@ -31,6 +32,8 @@ export default function FundProjectPage() {
       </div>
 
       <FundProjectModal projectId={projectId} />
+
+      <TransactionHistoryModal projectId={projectId} />
     </div>
   );
 }
