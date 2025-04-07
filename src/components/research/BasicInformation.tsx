@@ -100,7 +100,7 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Basic Information</h2>
+        <h2 className="text-2xl text-black font-bold">Basic Information</h2>
         <div className="space-x-4">
           <button
             onClick={onSave}
@@ -129,7 +129,7 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
               name="title"
               value={data.title}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border text-black border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Your research title"
               maxLength={80}
             />
@@ -149,7 +149,7 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
               name="category"
               value={data.category}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 text-black rounded-md focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="" disabled>
                 Select...
@@ -166,7 +166,7 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
             <label htmlFor="fundingGoal" className="block text-sm font-medium text-gray-700 mb-1">
               Funding Goal
             </label>
-            <div className="flex items-center border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-indigo-500 focus-within:border-indigo-500">
+            <div className="flex items-center border border-gray-300 text-black rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-indigo-500 focus-within:border-indigo-500">
               <input
                 type="number"
                 id="fundingGoal"
@@ -195,7 +195,7 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
             name="language"
             value={data.language}
             onChange={handleInputChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full px-4 py-2 border border-gray-300 text-black rounded-md focus:ring-indigo-500 focus:border-indigo-500"
           >
             <option value="" disabled>
               Select...
@@ -218,7 +218,7 @@ const BasicInformation: React.FC<BasicInfoProps> = ({
                 : 'bg-red-300 text-white cursor-not-allowed'
             }`}
           >
-            Save & Next
+            Next
           </button>
         </div>
       </div>

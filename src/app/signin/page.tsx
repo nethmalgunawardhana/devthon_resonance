@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword,GoogleAuthProvider, signInWithPopup, User } from 'firebase/auth';
 import { auth, db } from '@/firebase';
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, query, where, getDocs } from 'firebase/firestore';
 
 export default function SignIn() {
   const router = useRouter();
 
-  const [form, setForm] = useState({ username: '', password: '' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -21,45 +21,84 @@ export default function SignIn() {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         console.log('User is signed in:', user.email);
-        fetchUserDataAndSave(user.uid, user.email || '');
+        fetchUserData(user);
       }
     });
     return () => unsubscribe();
   }, []);
 
-  const fetchUserDataAndSave = async (uid: string, email: string) => {
+  const fetchUserData = async (user: User) => {
     try {
-      // Try to get user data from the 'researches' collection
-      const userDocRef = doc(db, 'researches', uid);
+      // First, check in the users collection (preferred location)
+      const userDocRef = doc(db, 'users', user.uid);
       const userDoc = await getDoc(userDocRef);
       
       if (userDoc.exists()) {
+        // User data found in users collection
         const userData = userDoc.data();
-        // Save user data to localStorage
-        localStorage.setItem('userId', uid);
+        
+        localStorage.setItem('userId', user.uid);
         localStorage.setItem('userData', JSON.stringify({
-          uid,
-          email,
-          username: userData.username || email.split('@')[0],
+          uid: user.uid,
+          email: user.email,
           firstName: userData.firstName || '',
           lastName: userData.lastName || '',
+          profileComplete: userData.profileComplete || false,
           // Include other user data as needed
         }));
-        console.log('User data saved to localStorage');
-      } else {
-        // If user document doesn't exist, at least save the UID
-        localStorage.setItem('userId', uid);
-        localStorage.setItem('userData', JSON.stringify({
-          uid,
-          email,
-          username: email.split('@')[0],
-        }));
-        console.log('Basic user data saved to localStorage');
+        console.log('User data found in users collection');
+        router.push('/');
+        return;
       }
+      
+      // Fallback: check in researches collection (legacy)
+      const researchesRef = collection(db, 'researches');
+      const q = query(researchesRef, where('email', '==', user.email));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
+        // Use the first matching document
+        const researchDoc = querySnapshot.docs[0];
+        const researchData = researchDoc.data();
+        const documentId = researchDoc.id;
+        
+        localStorage.setItem('userId', user.uid);
+        localStorage.setItem('userDocId', documentId); // Store Firestore doc ID separately
+        localStorage.setItem('userData', JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+          firstName: researchData.firstName || '',
+          lastName: researchData.lastName || '',
+          researchId: documentId,
+          // Include other user data as needed
+        }));
+        console.log('User data found in researches collection');
+        router.push('/');
+        return;
+      }
+      
+      // No user data found in either collection
+      localStorage.setItem('userId', user.uid);
+      localStorage.setItem('userData', JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        profileComplete: false
+      }));
+      console.log('No user data found, storing basic info');
+      
+    
+      router.push('/complete-profile');
+      
     } catch (err) {
       console.error('Error fetching user data:', err);
-      // Still save the uid in case of fetch error
-      localStorage.setItem('userId', uid);
+      // Save basic auth info
+      localStorage.setItem('userId', user.uid);
+      localStorage.setItem('userData', JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        profileComplete: false
+      }));
+      router.push('/');
     }
   };
 
@@ -69,29 +108,30 @@ export default function SignIn() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!form.username || !form.password) {
+    if (!form.email || !form.password) {
       setError('Please fill in all fields');
       return;
     }
     setLoading(true); 
     try {
-      const email = form.username + '@resonance.com';
-      const userCredential = await signInWithEmailAndPassword(auth, email, form.password);
-      const user = userCredential.user;
-      
-      // Fetch user data and save to localStorage
-      await fetchUserDataAndSave(user.uid, email);
-      
-      router.push('/'); 
+  
+      await signInWithEmailAndPassword(auth, form.email, form.password);
+   
     } catch (err) {
       console.error(err);
       if (err instanceof Error) {
-        setError(err.message || 'Invalid credentials');
+     
+        if (err.message.includes('user-not-found') || err.message.includes('wrong-password')) {
+          setError('Invalid email or password');
+        } else if (err.message.includes('too-many-requests')) {
+          setError('Too many failed login attempts. Please try again later.');
+        } else {
+          setError(err.message || 'Invalid credentials');
+        }
       } else {
         setError('An unexpected error occurred');
       }
-    } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -99,20 +139,17 @@ export default function SignIn() {
     setLoading(true); 
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+      await signInWithPopup(auth, provider);
       
-      // Fetch user data and save to localStorage
-      await fetchUserDataAndSave(user.uid, user.email || '');
       
-      router.push('/'); 
     } catch (err) {
+      console.error(err);
       if (err instanceof Error) {
-        console.error(err);
+        setError('Google Sign-In failed: ' + err.message);
+      } else {
         setError('Google Sign-In failed');
       }
-    } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -146,15 +183,15 @@ export default function SignIn() {
             )}
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-800">Username</label>
+              <label className="block text-sm font-medium text-gray-800">Email</label>
               <div className="relative">
                 <input
-                  type="text"
-                  name="username"
-                  value={form.username}
+                  type="email"
+                  name="email"
+                  value={form.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#770C0C]/30 focus:border-[#770C0C] transition-all"
-                  placeholder="Enter your username"
+                  placeholder="Enter your email address"
                 />
               </div>
             </div>

@@ -7,7 +7,7 @@ export const researchService = {
   async createResearch(data: ResearchFormData): Promise<any> {
     const formData = new FormData();
     
-    // Add userId to the form data
+
     formData.append('userId', data.userId);
     
     // Add basic info
@@ -34,13 +34,23 @@ export const researchService = {
     formData.append('allowCollaboratorRequests', data.collaborativeInfo.allowCollaboratorRequests.toString());
     formData.append('allowUnlistedSkills', data.collaborativeInfo.allowUnlistedSkills.toString());
     
-    data.collaborativeInfo.requestedSkills.forEach((skill, index) => {
-      if (skill) formData.append(`requestedSkills[${index}]`, skill);
-    });
+  
+    if (data.collaborativeInfo.requestedSkills.length === 0) {
+      formData.append('requestedSkills', JSON.stringify([]));
+    } else {
+      data.collaborativeInfo.requestedSkills.forEach((skill, index) => {
+        formData.append(`requestedSkills[${index}]`, skill || ''); 
+      });
+    }
     
-    data.collaborativeInfo.team.forEach((member, index) => {
-      formData.append(`team[${index}]`, member);
-    });
+    // For team with proper handling for empty values
+    if (data.collaborativeInfo.team.length === 0) {
+      formData.append('team', JSON.stringify([]));
+    } else {
+      data.collaborativeInfo.team.forEach((member, index) => {
+        formData.append(`team[${index}]`, member);
+      });
+    }
     
     const response = await axios.post(`${API_BASE_URL}/research`, formData, {
       headers: {
@@ -53,11 +63,9 @@ export const researchService = {
   
   async saveResearchDraft(data: ResearchFormData): Promise<any> {
     const formData = new FormData();
-    
-    // Add userId to the form data
+
     formData.append('userId', data.userId);
-    
-    // Add isDraft flag
+ 
     formData.append('isDraft', 'true');
     
     // Add basic info
@@ -84,13 +92,23 @@ export const researchService = {
     formData.append('allowCollaboratorRequests', data.collaborativeInfo.allowCollaboratorRequests.toString());
     formData.append('allowUnlistedSkills', data.collaborativeInfo.allowUnlistedSkills.toString());
     
-    data.collaborativeInfo.requestedSkills.forEach((skill, index) => {
-      if (skill) formData.append(`requestedSkills[${index}]`, skill);
-    });
+
+    if (data.collaborativeInfo.requestedSkills.length === 0) {
+      formData.append('requestedSkills', JSON.stringify([]));
+    } else {
+      data.collaborativeInfo.requestedSkills.forEach((skill, index) => {
+        formData.append(`requestedSkills[${index}]`, skill || ''); 
+      });
+    }
     
-    data.collaborativeInfo.team.forEach((member, index) => {
-      formData.append(`team[${index}]`, member);
-    });
+    // For team with proper handling for empty values
+    if (data.collaborativeInfo.team.length === 0) {
+      formData.append('team', JSON.stringify([]));
+    } else {
+      data.collaborativeInfo.team.forEach((member, index) => {
+        formData.append(`team[${index}]`, member);
+      });
+    }
     
     const response = await axios.post(`${API_BASE_URL}/research/draft`, formData, {
       headers: {
@@ -117,7 +135,7 @@ export const researchService = {
   },
   
   async createResearcher(researcherData: {
-    name: string;
+    firstName: string;
     email: string;
     specialization?: string;
     institution?: string;

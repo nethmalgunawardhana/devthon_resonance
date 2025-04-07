@@ -1,21 +1,24 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import Modal from '../research/modal'; // You'll need to create this Modal component
+import Modal from '../research/modal';
+import { Loader2 } from 'lucide-react'; 
 
 interface Researcher {
   _id: string;
-  name: string;
+  firstName: string;
   email: string;
 }
 
+interface CollaborativeData {
+  allowCollaboratorRequests: boolean;
+  allowUnlistedSkills: boolean;
+  requestedSkills: string[];
+  team: string[];
+}
+
 interface CollaborativeOpportunitiesProps {
-  data: {
-    allowCollaboratorRequests: boolean;
-    allowUnlistedSkills: boolean;
-    requestedSkills: string[];
-    team: string[];
-  };
-  onChange: (data: any) => void;
+  data: CollaborativeData;
+  onChange: (data: Partial<CollaborativeData>) => void;
   onSave: () => void;
   onSaveAndPreview: () => void;
   onNext: () => void;
@@ -35,10 +38,11 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
   const [researchers, setResearchers] = useState<Researcher[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedResearcher, setSelectedResearcher] = useState('');
+  const [isPublishing, setIsPublishing] = useState(false);
   
   // State for researcher creation modal
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newResearcher, setNewResearcher] = useState({ name: '', email: '', specialization: '', institution: '' });
+  const [newResearcher, setNewResearcher] = useState({ firstName: '', email: '', specialization: '', institution: '' });
 
   // Fetch researchers on component mount
   useEffect(() => {
@@ -88,7 +92,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
     
     const selected = researchers.find(r => r._id === researcherId);
     if (selected) {
-      const newTeamMember = `${selected.name} (${selected.email})`;
+      const newTeamMember = `${selected.firstName} (${selected.email})`;
       // Check if researcher is already in team
       if (!data.team.includes(newTeamMember)) {
         onChange({ team: [...data.team, newTeamMember] });
@@ -125,7 +129,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
         onChange({ team: [...data.team, newTeamMember] });
         
         // Reset form and close modal
-        setNewResearcher({ name: '', email: '', specialization: '', institution: '' });
+        setNewResearcher({ firstName: '', email: '', specialization: '', institution: '' });
         setIsModalOpen(false);
         
         // Refresh the researchers list
@@ -140,10 +144,15 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
     }
   };
 
+  const handlePublish = () => {
+    setIsPublishing(true);
+    onNext();
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Collaborative Opportunities</h2>
+        <h2 className="text-2xl text-black font-bold">Collaborative Opportunities</h2>
         <div className="space-x-4">
           <button
             onClick={onSave}
@@ -202,7 +211,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
                 type="text"
                 value={skill}
                 onChange={(e) => handleSkillChange(index, e.target.value)}
-                className="w-full pl-12 pr-16 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full pl-12 pr-16 py-2 text-black border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Skills, Specialties you are requesting"
                 maxLength={50}
               />
@@ -236,7 +245,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
           <div className="relative mb-4">
             <div className="relative">
               <select
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 appearance-none"
+                className="w-full px-4 py-2 text-black border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 appearance-none"
                 value={selectedResearcher}
                 onChange={handleSelectResearcher}
                 disabled={isLoading}
@@ -244,7 +253,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
                 <option value="">Search and add researchers you have connected with ...</option>
                 {researchers.map((r) => (
                   <option key={r._id} value={r._id}>
-                    {r.name} ({r.email})
+                    {r.firstName} ({r.email})
                   </option>
                 ))}
               </select>
@@ -260,26 +269,12 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
             <button
               type="button"
               className="flex items-center text-sm text-red-800 hover:text-red-900 mb-6"
-              onClick={() => {
-                setResearcher('');
-                setResearcherEmail('');
-              }}
-            >
-              <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add a researcher who doesn't have an account
-            </button>
-            
-            <button
-              type="button"
-              className="flex items-center text-sm text-red-800 hover:text-red-900 mb-6"
               onClick={() => setIsModalOpen(true)}
             >
               <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              Create new researcher
+              Add a researcher who doesn&apos;t have an account
             </button>
           </div>
 
@@ -331,7 +326,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
               <h4 className="text-sm font-medium text-gray-700">Added Researchers:</h4>
               <ul className="list-disc pl-5 text-sm">
                 {data.team.map((member, index) => (
-                  <li key={index} className="flex justify-between items-center pb-1">
+                  <li key={index} className="flex text-pink-950 justify-between items-center pb-1">
                     <span>{member}</span>
                     <button 
                       type="button" 
@@ -353,14 +348,23 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
           <button
             onClick={onPrevious}
             className="px-6 py-3 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200"
+            disabled={isPublishing}
           >
             Previous
           </button>
           <button
-            onClick={onNext}
-            className="px-6 py-3 bg-red-800 text-white rounded-md hover:bg-red-900"
+            onClick={handlePublish}
+            disabled={isPublishing}
+            className="px-6 py-3 bg-red-800 text-white rounded-md hover:bg-red-900 flex items-center justify-center min-w-[120px]"
           >
-            Save & Next
+            {isPublishing ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              "Publish"
+            )}
           </button>
         </div>
       </div>
@@ -376,8 +380,8 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
               <input
                 id="name"
                 type="text"
-                value={newResearcher.name}
-                onChange={(e) => setNewResearcher({...newResearcher, name: e.target.value})}
+                value={newResearcher.firstName}
+                onChange={(e) => setNewResearcher({...newResearcher, firstName: e.target.value})}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Researcher name"
                 required
@@ -433,14 +437,21 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
               </button>
               <button
                 type="submit"
-                disabled={isLoading || !newResearcher.name || !newResearcher.email}
+                disabled={isLoading || !newResearcher.firstName || !newResearcher.email}
                 className={`px-4 py-2 rounded-md ${
-                  !isLoading && newResearcher.name && newResearcher.email
+                  !isLoading && newResearcher.firstName && newResearcher.email
                     ? 'bg-red-800 text-white hover:bg-red-900'
                     : 'bg-red-300 text-white cursor-not-allowed'
                 }`}
               >
-                {isLoading ? 'Creating...' : 'Create Researcher'}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin inline" />
+                    Creating...
+                  </>
+                ) : (
+                  'Create Researcher'
+                )}
               </button>
             </div>
           </form>

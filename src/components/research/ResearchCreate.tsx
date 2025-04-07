@@ -6,6 +6,7 @@ import BasicInformation from './BasicInformation';
 import AdvanceInformation from './AdvanceInformation';
 import CollaborativeOpportunities from './CollaborativeOpportunities';
 import StepIndicator from './StepIndicator';
+import { Loader2 } from 'lucide-react'; 
 
 export type ResearchFormData = {
   basicInfo: {
@@ -34,6 +35,8 @@ const ResearchCreate: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [userId, setUserId] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [publishProgress, setPublishProgress] = useState(0); // Added progress state
   const [formData, setFormData] = useState<ResearchFormData>({
     basicInfo: {
       title: '',
@@ -56,7 +59,7 @@ const ResearchCreate: React.FC = () => {
     userId: '', 
   });
 
-  // Ensure component is mounted and get userId from localStorage
+
   useEffect(() => {
     setIsClient(true);
     
@@ -75,6 +78,29 @@ const ResearchCreate: React.FC = () => {
     }
   }, [router]);
 
+  useEffect(() => {
+    let progressInterval: NodeJS.Timeout;
+    
+    if (isSubmitting) {
+      progressInterval = setInterval(() => {
+        setPublishProgress(prev => {
+     
+          if (prev < 90) {
+            return prev + 10;
+          }
+          return prev;
+        });
+      }, 500);
+    } else if (publishProgress >= 90) {
+    
+      setPublishProgress(100);
+    }
+    
+    return () => {
+      if (progressInterval) clearInterval(progressInterval);
+    };
+  }, [isSubmitting, publishProgress]);
+
   const handleBasicInfoChange = (data: Partial<ResearchFormData['basicInfo']>) => {
     setFormData((prev) => ({ ...prev, basicInfo: { ...prev.basicInfo, ...data } }));
   };
@@ -83,18 +109,15 @@ const ResearchCreate: React.FC = () => {
     setFormData((prev) => ({ ...prev, advanceInfo: { ...prev.advanceInfo, ...data } }));
   };
 
-  // Fixed handleCollaborativeInfoChange function to properly handle team array updates
   const handleCollaborativeInfoChange = (data: Partial<ResearchFormData['collaborativeInfo']>) => {
     setFormData((prev) => {
-      // Create a new object to avoid reference issues
+ 
       const newCollaborativeInfo = { ...prev.collaborativeInfo };
-      
-      // Handle team array specially to ensure it's properly updated
+    
       if (data.team) {
         newCollaborativeInfo.team = [...data.team];
       }
-      
-      // Handle other fields
+ 
       if (data.allowCollaboratorRequests !== undefined) {
         newCollaborativeInfo.allowCollaboratorRequests = data.allowCollaboratorRequests;
       }
@@ -110,7 +133,7 @@ const ResearchCreate: React.FC = () => {
       return { ...prev, collaborativeInfo: newCollaborativeInfo };
     });
     
-    // Debug logging to verify state updates
+
     console.log("Updated collaborative info data:", data);
   };
 
@@ -119,20 +142,32 @@ const ResearchCreate: React.FC = () => {
       setCurrentStep(currentStep + 1);
     } else {
       try {
-        // Ensure we have a userId before submitting
+ 
         if (!formData.userId) {
           throw new Error('User ID is required');
         }
         
-        // Log form data before submission to verify team data
+        setIsSubmitting(true);
+        setPublishProgress(10); 
+        
+     
         console.log("Submitting form data:", formData);
         
-        // Submit the entire form with userId
+   
         await researchService.createResearch(formData);
-        router.push('/dashboard/research');
+        
+ 
+        setPublishProgress(100);
+   
+        setTimeout(() => {
+          router.push('/dashboard/research');
+        }, 500);
       } catch (error) {
         console.error('Error creating research:', error);
-        // You might want to add error handling UI here
+     
+        setPublishProgress(0);
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -145,46 +180,42 @@ const ResearchCreate: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      // Ensure we have a userId before saving
+   
       if (!formData.userId) {
         throw new Error('User ID is required');
       }
-      
-      // Log the data before saving to verify team data
+   
       console.log("Saving draft with data:", formData);
-      
-      // Save as draft with userId
+
       await researchService.saveResearchDraft(formData);
     } catch (error) {
       console.error('Error saving draft:', error);
-      // You might want to add error handling UI here
     }
   };
 
   const handleSaveAndPreview = async () => {
     try {
-      // Ensure we have a userId before saving and previewing
+
       if (!formData.userId) {
         throw new Error('User ID is required');
       }
       
-      // Log the data before saving and previewing to verify team data
+    
       console.log("Saving and previewing with data:", formData);
       
       const savedData = await researchService.saveResearchDraft(formData);
       router.push(`/research/preview/${savedData.id}`);
     } catch (error) {
       console.error('Error saving and previewing:', error);
-      // You might want to add error handling UI here
     }
   };
 
-  // Show loading state or redirect if not client-side or no userId
+
   if (!isClient) {
-    return null; // Return null or a loading state while client-side rendering is not yet available
+    return null; 
   }
 
-  // Optional: Return a loading state or redirect if no userId
+
   if (!userId) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -192,9 +223,6 @@ const ResearchCreate: React.FC = () => {
       </div>
     );
   }
-
-  // Debugging: Log the current state of formData to track team updates
-  console.log("Current form data:", formData);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -235,9 +263,37 @@ const ResearchCreate: React.FC = () => {
             onChange={handleCollaborativeInfoChange} 
             onSave={handleSave}
             onSaveAndPreview={handleSaveAndPreview}
-            onNext={handleNext}
+            onNext={() => {
+              if (!isSubmitting) handleNext();
+            }}
             onPrevious={handlePrevious}
           />
+        )}
+        
+        {/* Publishing Progress Overlay */}
+        {isSubmitting && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+              <div className="flex items-center justify-center mb-4">
+                <Loader2 className="h-8 w-8 text-red-800 animate-spin mr-2" />
+                <h3 className="text-lg font-medium text-gray-900">Publishing Research...</h3>
+              </div>
+              
+              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                <div 
+                  className="bg-red-800 h-2.5 rounded-full transition-all duration-300 ease-out" 
+                  style={{ width: `${publishProgress}%` }}
+                ></div>
+              </div>
+              
+              <p className="text-sm text-gray-500 text-center">
+                {publishProgress < 30 && "Preparing your research..."}
+                {publishProgress >= 30 && publishProgress < 60 && "Uploading content..."}
+                {publishProgress >= 60 && publishProgress < 90 && "Processing submission..."}
+                {publishProgress >= 90 && "Finalizing publication..."}
+              </p>
+            </div>
+          </div>
         )}
       </div>
     </div>
