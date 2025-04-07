@@ -62,8 +62,11 @@ export default function Navbar() {
           <Link href="/contact" className="text-sm font-medium text-gray-800 hover:text-[#770C0C]">
             Contact
           </Link>
-          <Link href="/become-researcher" className="text-sm font-medium text-gray-800 hover:text-[#770C0C]">
+          <Link href="/researchcreate" className="text-sm font-medium text-gray-800 hover:text-[#770C0C]">
             Become Researcher
+          </Link>
+          <Link href="/Q&A" className="text-sm font-medium text-gray-800 hover:text-[#770C0C]">
+            FAQ
           </Link>
         </div>
 

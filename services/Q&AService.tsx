@@ -24,11 +24,11 @@ export const api = {
   async getQuestions(): Promise<Question[]> {
     try {
       const response = await axios.get<ApiResponse<Question[]>>(`${API_BASE_URL}/questions`);
-      // Check if the response has the expected structure
+    
       if (response.data.success && Array.isArray(response.data.data)) {
-        return response.data.data; // Return just the data array
+        return response.data.data; 
       } else {
-        // If for some reason the API directly returns an array
+       y
         if (Array.isArray(response.data)) {
           return response.data;
         }
@@ -43,11 +43,11 @@ export const api = {
   async getQuestionById(questionId: string): Promise<Question> {
     try {
       const response = await axios.get<ApiResponse<Question>>(`${API_BASE_URL}/questions/${questionId}`);
-      // Check if the response has the expected structure
+ 
       if (response.data.success && response.data.data) {
         return response.data.data;
       } else {
-        // If for some reason the API directly returns the question object
+      
         if ('id' in response.data) {
           return response.data as unknown as Question;
         }

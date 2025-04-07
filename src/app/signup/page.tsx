@@ -13,7 +13,7 @@ export default function SignUp() {
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
-    username: '',
+    email: '',
     password: '',
     repeatPassword: '',
   });
@@ -30,7 +30,7 @@ export default function SignUp() {
     setLoading(true);
 
     // Validate form fields
-    if (!form.firstName || !form.lastName || !form.username || !form.password || !form.repeatPassword) {
+    if (!form.firstName || !form.lastName || !form.email || !form.password || !form.repeatPassword) {
       setError('All fields are required');
       setLoading(false);
       return;
@@ -44,7 +44,7 @@ export default function SignUp() {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        form.username + '@resonance.com',
+        form.email,
         form.password
       );
       const user = userCredential.user;
@@ -53,12 +53,11 @@ export default function SignUp() {
       await setDoc(doc(db, 'researches', user.uid), {
         firstName: form.firstName,
         lastName: form.lastName,
-        username: form.username,
+        email: form.email,
         uid: user.uid,
         createdAt: new Date(),
       });
 
-    
       router.push('/signin');
     } catch (err: unknown) {
       console.error(err);
@@ -74,22 +73,18 @@ export default function SignUp() {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
   
-    
       const userRef = doc(db, 'researches', user.uid);
       
       try {
-      
         await setDoc(userRef, {
           uid: user.uid,
           firstName: user.displayName?.split(' ')[0] || '',
           lastName: user.displayName?.split(' ')[1] || '',
-          username: user.email?.split('@')[0] || '',
           email: user.email,
           createdAt: new Date(),
           lastLogin: new Date(), 
         }, { merge: true });
   
-      
         router.push('/');
       } catch (firestoreErr) {
         console.error("Firestore error:", firestoreErr);
@@ -191,12 +186,12 @@ export default function SignUp() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-800 mb-1">Username</label>
+              <label className="block text-sm font-medium text-gray-800 mb-1">Email</label>
               <input
-                type="text"
-                name="username"
-                placeholder="Choose a username"
-                value={form.username}
+                type="email"
+                name="email"
+                placeholder="Enter your email address"
+                value={form.email}
                 onChange={handleChange}
                 className="w-full px-4 py-3 text-sm text-black placeholder-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#770C0C]/30 focus:border-[#770C0C] transition-all"
               />
