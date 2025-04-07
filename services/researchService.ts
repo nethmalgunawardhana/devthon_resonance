@@ -44,7 +44,7 @@ export const researchService = {
     
     // For team - now sending array of researcher UIDs
     formData.append('team', JSON.stringify(data.collaborativeInfo.team));
-
+    console.log('FormData:', formData);
 
     
     const response = await axios.post(`${API_BASE_URL}/research`, formData, {
