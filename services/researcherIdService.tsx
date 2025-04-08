@@ -3,6 +3,8 @@ export interface Researcher {
     firstName: string;
     lastName: string;
     imageUrl: string;
+    email: string;
+    about: string;
 }
 
 export const getResearcherById = async (id: string): Promise<Researcher> => {
@@ -32,4 +34,3 @@ export const getAllResearchers = async (): Promise<Researcher[]> => {
     throw error;
   }
 }
-
