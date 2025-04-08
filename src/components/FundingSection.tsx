@@ -10,6 +10,7 @@ import { FaCopy } from "react-icons/fa6";
 import FundProjectBlockchainModal from './FundProjectBlockchainModal';
 import BlockchainTransactionHistoryModal from './BlockchainTransactionHistoryModal';
 import { ResearchProject } from '../../services/researchService2';
+import AllTransactionHistoryModal from './AllTransactionHistoryModal';
 
 interface FundingSectionProps {
   project: ResearchProject;
@@ -28,36 +29,28 @@ const FundingSection: React.FC<FundingSectionProps> = ({ project }) => {
   const [totalFunding, setTotalFunding] = useState(0);
   const [totalFundingTransactions, setTotalFundingTransactions] = useState(0);
 
+
+  const fetchTransactionHistory = React.useCallback(async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/projects/${project.id}/fundingtransactions`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch transaction history');
+      }
+      const data = await response.json();
+
+      setTotalFunding(data.totalFunding);
+      setTotalFundingTransactions(data.numberOfTransactions);
+      setTransactionHistoryFromFirestore(data.fundingTransactions);
+
+    } catch (error) {
+      console.error('Error fetching transaction history:', error);
+    }
+  }, [API_BASE_URL, project.id]);
+
   useEffect(() => {
     setResearchProject(project);
-
-    const fetchTransactionHistory = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/research/projects/${project.id}/fundingtransactions`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch transaction history');
-        }
-        const data = await response.json();
-
-        setTotalFunding(data.totalFunding);
-
-        setTotalFundingTransactions(data.numberOfTransactions);
-        setTransactionHistoryFromFirestore(data.fundingTransactions);
-        setTransactionHistoryFromFirestore(data.data);
-
-        console.log('Transaction History:', data);
-        console.log('Total Funding:', data.totalFunding);
-        console.log('Number of Transactions:', data.numberOfTransactions);
-        console.log('Funding Transactions:', data.fundingTransactions);
-      }
-      catch (error) {
-        console.error('Error fetching transaction history:', error);
-      }
-    };
     fetchTransactionHistory();
-
-
-  }, [project, API_BASE_URL]);
+  }, [project, fetchTransactionHistory]);
 
   console.log('project:', project);
 
@@ -162,16 +155,19 @@ const FundingSection: React.FC<FundingSectionProps> = ({ project }) => {
         {paymentMethod === 'blockchain' && (
             <FundProjectBlockchainModal 
               projectId={Number(researchProject?.onChainProjectId)}
-              projectDocId={researchProject?.id}
+              projectDocId={researchProject?.id || ''}
             />  
         )}
 
-
-        
-        <button className="w-full bg-gray-50 text-center font-semibold rounded-md text-sm text-gray-600 py-3
-          border border-gray-200 hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:scale-95 transition">
-          View All Fund Transactions
-        </button>
+        <div className="mt-3">
+            <AllTransactionHistoryModal 
+              projectId={Number(researchProject?.onChainProjectId)}
+              transactionHistoryFromFirestore={transactionHistoryFromFirestore}
+              onRefreshData={() => {
+                fetchTransactionHistory();
+              }}
+            />
+        </div>
 
         <div className='mt-3'>
           <BlockchainTransactionHistoryModal projectId={Number(researchProject?.onChainProjectId)} />
