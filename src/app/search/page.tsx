@@ -61,10 +61,10 @@ export default function Search() {
   return (
     <div className="bg-white min-h-screen">
     <Navbar />
-    <div className="min-h-screen bg-white p-10">
+    <div className="min-h-screen bg-white p-16 mt-10">
    
       {/* Search Bar */}
-      <SearchBarSection onSearch={getProjects} />
+      <SearchBarSection onSearch={getProjects}/>
 
       {/* Loading Spinner */}
       {loading && (
@@ -88,10 +88,10 @@ export default function Search() {
       {/* Published Papers Section */}
       {!loading && publishedPapers.length > 0 && (
         <div className="px-8 py-10">
-          <h2 className="text-2xl font-semibold mb-6 text-[#1D2026]">Published Papers</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-[rgb(29,32,38)]">Published Papers</h2>
           <ul className="space-y-6">
             {publishedPapers.map((paper, index) => (
-              <li key={index} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+              <li key={index} className="border p-4 shadow-sm hover:shadow-md transition">
                 <h3 className="text-lg font-semibold text-[#1D2026]">{paper.title}</h3>
                 <p className="text-sm text-gray-500 mb-2">Authors: {paper.authors}</p>
                 <p className="text-sm text-gray-500 mb-2">

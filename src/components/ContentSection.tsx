@@ -60,7 +60,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ details, researchers })
           <div className="ml-auto text-gray-500 text-sm">{details.views.toLocaleString()} Views</div>
         </div>
 
-        <div className="relative w-full h-100 bg-gray-200 mb-20 flex items-center justify-center mt-20">
+        <div className="relative w-full h-100 bg-gray-200 mb-12 flex items-center justify-center mt-12">
           {details.trailerVideoUrl ? (
             <video
               src={details.trailerVideoUrl}
