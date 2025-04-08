@@ -286,11 +286,11 @@ const AdvanceInformation: React.FC<AdvanceInfoProps> = ({
                   onChange={(e) => handleKeyInfoChange(index, e.target.value)}
                   className="w-full pl-12 pr-16 py-2 text-black border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Key points about this research"
-                  maxLength={50}
+                  maxLength={100}
                   rows={1}
                 />
                 <span className="absolute right-3 top-3 text-xs text-gray-500">
-                  {info.length}/50
+                  {info.length}/100
                 </span>
               </div>
             ))}

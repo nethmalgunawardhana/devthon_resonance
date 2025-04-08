@@ -42,10 +42,14 @@ export const researchService = {
       });
     }
     
-    // For team - now sending array of researcher UIDs
-    formData.append('team', JSON.stringify(data.collaborativeInfo.team));
-    console.log('FormData:', formData);
-
+   // For team with proper handling for empty values
+   if (data.collaborativeInfo.team.length === 0) {
+    formData.append('team', JSON.stringify([]));
+  } else {
+    data.collaborativeInfo.team.forEach((member, index) => {
+      formData.append(`team[${index}]`, member);
+    });
+  }
     
     const response = await axios.post(`${API_BASE_URL}/research`, formData, {
       headers: {
@@ -95,7 +99,14 @@ export const researchService = {
       });
     }
     
-   formData.append('team', data.collaborativeInfo.team.length === 0 ? JSON.stringify([]) : JSON.stringify(data.collaborativeInfo.team));
+  // For team with proper handling for empty values
+  if (data.collaborativeInfo.team.length === 0) {
+    formData.append('team', JSON.stringify([]));
+  } else {
+    data.collaborativeInfo.team.forEach((member, index) => {
+      formData.append(`team[${index}]`, member);
+    });
+  }
     
     const response = await axios.post(`${API_BASE_URL}/research/draft`, formData, {
       headers: {
