@@ -28,7 +28,6 @@ export const api = {
       if (response.data.success && Array.isArray(response.data.data)) {
         return response.data.data; 
       } else {
-       y
         if (Array.isArray(response.data)) {
           return response.data;
         }
