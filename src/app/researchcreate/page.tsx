@@ -19,6 +19,7 @@ const CreateResearchPage: NextPage = () => {
             <Head>
                 <title>Create Research</title>
                 <meta name="description" content="Create your research project" />
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></link>
             </Head>
             <Navbar />
             <div className="pt-18">
