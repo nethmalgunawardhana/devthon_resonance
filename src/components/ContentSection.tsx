@@ -1,6 +1,7 @@
 import React from 'react';
 import { RxAvatar } from "react-icons/rx";
 import CommentSection from './CommentSection';
+import {useRouter} from "next/navigation";
 
 interface ContentSectionProps {
   details: {
@@ -22,14 +23,20 @@ interface ContentSectionProps {
 }
 
 const ContentSection: React.FC<ContentSectionProps> = ({ details, researchers }) => {
-  console.log(details.createdAt);
-
+  const router = useRouter();
 
   return (
     <div className="max-w-4xl">
       <div className="mb-8">
         <div className="flex items-center text-sm text-gray-500 mb-4">
           <span>Home</span>
+          <span className="mx-2">›</span>
+          <span
+            className="cursor-pointer hover:underline"
+            onClick={() => router.back()}
+          >
+            Researches
+          </span>
           <span className="mx-2">›</span>
           <span>{details.category}</span>
         </div>
@@ -53,12 +60,13 @@ const ContentSection: React.FC<ContentSectionProps> = ({ details, researchers })
           <div className="ml-auto text-gray-500 text-sm">{details.views.toLocaleString()} Views</div>
         </div>
 
-        <div className="relative w-full h-100 bg-gray-200 mb-8 flex items-center justify-center pt-5">
+        <div className="relative w-full h-100 bg-gray-200 mb-20 flex items-center justify-center mt-20">
           {details.trailerVideoUrl ? (
             <video
               src={details.trailerVideoUrl}
               controls
               className="w-full h-auto rounded"
+              onError={() => console.error("Failed to load video:", details.trailerVideoUrl)}
             >
               Your browser does not support the video tag.
             </video>

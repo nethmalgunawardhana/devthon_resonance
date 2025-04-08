@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import { fetchResearchProjectById, ResearchProject } from '../../../services/researchService2';
 import { getResearcherById } from '../../../services/researcherIdService';
 import { Loader } from 'lucide-react';
+
 const ResearchView = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
