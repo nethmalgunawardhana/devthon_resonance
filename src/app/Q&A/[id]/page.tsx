@@ -228,7 +228,7 @@ export default function QuestionDetailPage() {
               {answers.map((answer, index) => (
                 <div 
                   key={answer.id} 
-                  className={`bg-white rounded-lg shadow-sm p-6 border ${index === 0 && answer.votes > 0 ? 'border-green-100' : 'border-gray-100'}`}
+                  className={`bg-white text-black rounded-lg shadow-sm p-6 border ${index === 0 && answer.votes > 0 ? 'border-green-100' : 'border-gray-100'}`}
                 >
                   {index === 0 && answer.votes > 0 && (
                     <div className="flex items-center mb-3 bg-green-50 text-green-800 px-3 py-1 rounded-full text-sm inline-flex">
@@ -293,7 +293,7 @@ export default function QuestionDetailPage() {
                 id="userName"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800 focus:border-transparent transition-shadow"
+                className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800 focus:border-transparent transition-shadow"
                 placeholder="Enter your name"
                 required
               />
@@ -307,7 +307,7 @@ export default function QuestionDetailPage() {
                 rows={6}
                 value={newAnswer}
                 onChange={(e) => setNewAnswer(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800 focus:border-transparent transition-shadow"
+                className="w-full px-4 py-3 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800 focus:border-transparent transition-shadow"
                 placeholder="Write your answer here..."
                 required
               />
