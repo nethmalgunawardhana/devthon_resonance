@@ -6,6 +6,8 @@ import ResearchCard from "@/components/ResearchCard";
 import { fetchResearchProjects, ResearchProject, fetchTrendingResearchProjects } from "../../../services/researchService2";
 import { getResearcherById } from "../../../services/researcherIdService";
 import { fetchPublishedResearches, ResearchItem } from "../../../services/arxivService";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/footer";
 
 export default function Search() {
   const [researchProjects, setResearchProjects] = useState<ResearchProject[]>([]);
@@ -57,7 +59,10 @@ export default function Search() {
   };
 
   return (
+    <div className="bg-white min-h-screen">
+    <Navbar />
     <div className="min-h-screen bg-white p-10">
+   
       {/* Search Bar */}
       <SearchBarSection onSearch={getProjects} />
 
@@ -128,6 +133,9 @@ export default function Search() {
           </div>
         </div>
       )}
+     
+    </div>
+    <Footer />
     </div>
   );
 }

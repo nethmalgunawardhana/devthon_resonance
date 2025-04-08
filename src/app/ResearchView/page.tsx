@@ -8,6 +8,8 @@ import { useSearchParams } from 'next/navigation';
 import { fetchResearchProjectById, ResearchProject } from '../../../services/researchService2';
 import { getResearcherById } from '../../../services/researcherIdService';
 import { Loader } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/footer';
 
 const ResearchView = () => {
   const searchParams = useSearchParams();
@@ -66,6 +68,7 @@ const ResearchView = () => {
   }
 
   return (
+    <div className="bg-white min-h-screen">
     <motion.div
       className="min-h-screen bg-white p-20"
       initial={{ opacity: 0, y: 50 }}
@@ -74,6 +77,7 @@ const ResearchView = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="container mx-auto py-8 px-4 z-10 relative">
+        <Navbar />
         <div className="flex flex-col lg:flex-row lg:space-x-8">
           <motion.div
             className="lg:flex-grow"
@@ -110,8 +114,12 @@ const ResearchView = () => {
             <FundingSection />
           </motion.div>
         </div>
+       
       </div>
+    
     </motion.div>
+    <Footer />
+</div>
   );
 };
 
