@@ -65,3 +65,17 @@ export const fetchTrendingResearchProjects = async (): Promise<ResearchProject[]
   }
 }
 
+export const fetchResearchProjectForResearcher = async (id: string): Promise<ResearchProject[]> => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/local-papers/${id}`); 
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data;
+  }
+  catch (error) {
+    console.error('Error fetching research projects:', error);
+    return [];
+  }
+}
