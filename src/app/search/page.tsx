@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import SearchBarSection from "@/components/SearchBarSection";
 import ResearchCard from "@/components/ResearchCard";
-import { fetchResearchProjects, ResearchProject, fetchTrendingResearchProjects } from "../../../services/researchService";
+import { fetchResearchProjects, ResearchProject, fetchTrendingResearchProjects } from "../../../services/researchService2";
 import { getResearcherById } from "../../../services/researcherIdService";
 import { fetchPublishedResearches, ResearchItem } from "../../../services/arxivService";
 

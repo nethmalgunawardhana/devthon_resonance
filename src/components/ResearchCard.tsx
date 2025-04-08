@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { ResearchProject } from "../../services/researchService";
+import { ResearchProject } from "../../services/researchService2";
 
 interface ResearchCardProps {
   project: ResearchProject;
