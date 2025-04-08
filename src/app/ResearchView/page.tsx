@@ -9,7 +9,7 @@ import { fetchResearchProjectById, ResearchProject } from '../../../services/res
 import { getResearcherById } from '../../../services/researcherIdService';
 import { Loader } from 'lucide-react';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/footer';
+import Footer from '@/components/Footer';
 
 const ResearchView = () => {
   const searchParams = useSearchParams();

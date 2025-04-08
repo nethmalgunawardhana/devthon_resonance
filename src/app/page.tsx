@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/footer';
+import Footer from '@/components/Footer';
 
 import { FaFlask, FaBook, FaChartLine, FaClipboardList } from 'react-icons/fa';
 import { GiMagnifyingGlass, GiChemicalDrop, GiArchiveResearch } from 'react-icons/gi';
