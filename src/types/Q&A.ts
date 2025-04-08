@@ -2,6 +2,7 @@ export interface Question {
     id: string;
     title: string;
     content: string;
+    category?: string;
     votes: number;
     answers: number;
     userName: string;
