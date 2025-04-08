@@ -36,7 +36,9 @@ const ResearchCreate: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [userId, setUserId] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [publishProgress, setPublishProgress] = useState(0); // Added progress state
+  const [isSavingPreview, setIsSavingPreview] = useState(false);
+  const [publishProgress, setPublishProgress] = useState(0);
+  const [previewProgress, setPreviewProgress] = useState(0);
   const [formData, setFormData] = useState<ResearchFormData>({
     basicInfo: {
       title: '',
@@ -84,7 +86,6 @@ const ResearchCreate: React.FC = () => {
     if (isSubmitting) {
       progressInterval = setInterval(() => {
         setPublishProgress(prev => {
-     
           if (prev < 90) {
             return prev + 10;
           }
@@ -92,7 +93,6 @@ const ResearchCreate: React.FC = () => {
         });
       }, 500);
     } else if (publishProgress >= 90) {
-    
       setPublishProgress(100);
     }
     
@@ -100,6 +100,27 @@ const ResearchCreate: React.FC = () => {
       if (progressInterval) clearInterval(progressInterval);
     };
   }, [isSubmitting, publishProgress]);
+
+  useEffect(() => {
+    let previewProgressInterval: NodeJS.Timeout;
+    
+    if (isSavingPreview) {
+      previewProgressInterval = setInterval(() => {
+        setPreviewProgress(prev => {
+          if (prev < 90) {
+            return prev + 15;
+          }
+          return prev;
+        });
+      }, 300);
+    } else if (previewProgress >= 90) {
+      setPreviewProgress(100);
+    }
+    
+    return () => {
+      if (previewProgressInterval) clearInterval(previewProgressInterval);
+    };
+  }, [isSavingPreview, previewProgress]);
 
   const handleBasicInfoChange = (data: Partial<ResearchFormData['basicInfo']>) => {
     setFormData((prev) => ({ ...prev, basicInfo: { ...prev.basicInfo, ...data } }));
@@ -111,11 +132,9 @@ const ResearchCreate: React.FC = () => {
 
   const handleCollaborativeInfoChange = (data: Partial<ResearchFormData['collaborativeInfo']>) => {
     setFormData((prev) => {
- 
       const newCollaborativeInfo = { ...prev.collaborativeInfo };
     
       if (data.team) {
-  
         newCollaborativeInfo.team = data.team;
         console.log("Updated team data:", newCollaborativeInfo.team);
       }
@@ -135,7 +154,6 @@ const ResearchCreate: React.FC = () => {
       return { ...prev, collaborativeInfo: newCollaborativeInfo };
     });
     
-
     console.log("Updated collaborative info data:", data);
   };
 
@@ -144,7 +162,6 @@ const ResearchCreate: React.FC = () => {
       setCurrentStep(currentStep + 1);
     } else {
       try {
- 
         if (!formData.userId) {
           throw new Error('User ID is required');
         }
@@ -152,17 +169,14 @@ const ResearchCreate: React.FC = () => {
         setIsSubmitting(true);
         setPublishProgress(10); 
         
-     
         console.log("Submitting form data:", formData);
         
-   
         await researchService.createResearch(formData);
         
- 
         setPublishProgress(100);
    
         setTimeout(() => {
-          router.push('/research/preview'); 
+          router.push('/'); 
         }, 500);
       } catch (error) {
         console.error('Error creating research:', error);
@@ -182,7 +196,6 @@ const ResearchCreate: React.FC = () => {
 
   const handleSave = async () => {
     try {
-   
       if (!formData.userId) {
         throw new Error('User ID is required');
       }
@@ -197,18 +210,27 @@ const ResearchCreate: React.FC = () => {
 
   const handleSaveAndPreview = async () => {
     try {
-
       if (!formData.userId) {
         throw new Error('User ID is required');
       }
       
-    
+      setIsSavingPreview(true);
+      setPreviewProgress(10);
+      
       console.log("Saving and previewing with data:", formData);
       
       const savedData = await researchService.saveResearchDraft(formData);
-      router.push(`/research/preview/${savedData.id}`);
+      
+      setPreviewProgress(100);
+      
+      setTimeout(() => {
+        router.push(`/ResearchView?id=${savedData.id}`);
+      }, 300);
     } catch (error) {
       console.error('Error saving and previewing:', error);
+      setPreviewProgress(0);
+    } finally {
+      setIsSavingPreview(false);
     }
   };
 
@@ -293,6 +315,32 @@ const ResearchCreate: React.FC = () => {
                 {publishProgress >= 30 && publishProgress < 60 && "Uploading content..."}
                 {publishProgress >= 60 && publishProgress < 90 && "Processing submission..."}
                 {publishProgress >= 90 && "Finalizing publication..."}
+              </p>
+            </div>
+          </div>
+        )}
+        
+        {/* Save and Preview Progress Overlay */}
+        {isSavingPreview && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+              <div className="flex items-center justify-center mb-4">
+                <Loader2 className="h-8 w-8 text-red-800 animate-spin mr-2" />
+                <h3 className="text-lg font-medium text-gray-900">Preparing Preview...</h3>
+              </div>
+              
+              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                <div 
+                  className="bg-red-800 h-2.5 rounded-full transition-all duration-300 ease-out" 
+                  style={{ width: `${previewProgress}%` }}
+                ></div>
+              </div>
+              
+              <p className="text-sm text-gray-500 text-center">
+                {previewProgress < 30 && "Saving your research..."}
+                {previewProgress >= 30 && previewProgress < 60 && "Preparing preview data..."}
+                {previewProgress >= 60 && previewProgress < 90 && "Generating preview..."}
+                {previewProgress >= 90 && "Opening preview..."}
               </p>
             </div>
           </div>

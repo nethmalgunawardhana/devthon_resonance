@@ -10,15 +10,19 @@ import { FaCopy } from "react-icons/fa6";
 
 const FundingSection = () => {
   const [copied, setCopied] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); 
+      setTimeout(() => setCopied(false), 2000);
     }).catch((err) => {
       console.error("Failed to copy: ", err);
     });
   };
+
+  const stripeLink = "https://buy.stripe.com/test_cN2dTTf5Z5cX5BC6oo";
+  const blockchainLink = "https://your-blockchain-payment-url.com"; // Update with your actual blockchain payment URL
 
   return (
     <div className="w-full max-w-x5">
@@ -46,11 +50,40 @@ const FundingSection = () => {
           <span className="ml-auto text-sm font-medium text-gray-500">29</span>
         </div>
         
-        <button className="w-full bg-[#770C0C] text-white py-3 rounded-md font-medium mb-3
-          hover:bg-[#770C0C]/80 transition duration-200 ease-in-out">
+        <button
+          onClick={() => setShowModal(true)}
+          className="w-full bg-[#770C0C] text-white py-3 rounded-md font-medium mb-3
+                     hover:bg-[#770C0C]/80 transition duration-200 ease-in-out"
+        >
           Fund This Research
         </button>
         
+        {showModal && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+              <h2 className="text-xl font-semibold mb-4 text-center text-[#1D2026]">Choose Payment Method</h2>
+              <button
+                onClick={() => window.location.href = stripeLink}
+                className="w-full bg-blue-600 text-white py-2 rounded-md mb-3 hover:bg-blue-700 transition"
+              >
+                Pay with Card / Stripe
+              </button>
+              <button
+                onClick={() => window.location.href = blockchainLink}
+                className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
+              >
+                Pay with Blockchain
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="mt-4 w-full text-sm text-gray-600 hover:underline text-center"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* <button className="w-full  text-[#770C0C]  bg-[#FFEEE8] py-3 rounded-md font-medium mb-3">
           Request To Collaborate
         </button> */}
@@ -87,7 +120,8 @@ const FundingSection = () => {
           <button className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded
             hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:scale-95 transition"
             onClick={() => {
-              const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
+
+              const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://voluntrix-preview.vercel.app/")}`;
               window.open(linkedInShareUrl, "_blank");
             }}
           >

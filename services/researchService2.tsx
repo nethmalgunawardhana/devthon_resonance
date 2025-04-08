@@ -18,6 +18,7 @@ export interface ResearchProject {
 export const fetchResearchProjects = async (searchQuery: string): Promise<ResearchProject[]> => {
   try {
     const response = await fetch(`http://localhost:5000/api/research/projects/category/${searchQuery}`); 
+
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -45,7 +46,6 @@ export const fetchResearchProjectById = async (id: string): Promise<ResearchProj
   }
 };
 
-
 export const fetchTrendingResearchProjects = async (): Promise<ResearchProject[]> => {
   try {
     const response = await fetch(`http://localhost:5000/api/research/projects/trending`); 
@@ -60,3 +60,4 @@ export const fetchTrendingResearchProjects = async (): Promise<ResearchProject[]
     return [];
   }
 }
+
