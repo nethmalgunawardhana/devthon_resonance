@@ -78,7 +78,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
       
       // Log the researcher data with their UIDs
       console.log('Fetched researchers:', data);
-      data.forEach(researcher => {
+      data.forEach((researcher: { firstName: any; uid: any; }) => {
         console.log(`Researcher: ${researcher.firstName}, ID: ${researcher.uid}`);
       });
       
