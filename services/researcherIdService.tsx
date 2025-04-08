@@ -9,7 +9,7 @@ export interface Researcher {
 
 export const getResearcherById = async (id: string): Promise<Researcher> => {
   try {
-    const response = await fetch(`http://localhost:5000/api/researchers/${id}`);
+    const response = await fetch(`https://resonance-backend.vercel.app/api/researchers/${id}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch researcher with id: ${id}`);
     }
@@ -23,7 +23,7 @@ export const getResearcherById = async (id: string): Promise<Researcher> => {
 
 export const getAllResearchers = async (): Promise<Researcher[]> => {
   try {
-    const response = await fetch(`http://localhost:5000/api/researchers`);
+    const response = await fetch(`https://resonance-backend.vercel.app/api/researchers`);
     if (!response.ok) {
       throw new Error('Failed to fetch researchers');
     }

@@ -29,7 +29,7 @@ export default function BlockchainTransactionHistoryModal({ projectId }: { proje
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/blockchain/project/${projectId}/transactions`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://resonance-backend.vercel.app'}/api/blockchain/project/${projectId}/transactions`);
       if (!response.ok) {
         throw new Error("Failed to fetch transaction history");
       }

@@ -8,7 +8,7 @@ export interface ResearchItem {
 }
 
 export const fetchPublishedResearches = async (query: string): Promise<ResearchItem[]> => {
-    const response = await fetch(`http://localhost:5000/api/published-papers?category=${query.replace(' ', '%20')}`, {
+    const response = await fetch(`https://resonance-backend.vercel.app/api/published-papers?category=${query.replace(' ', '%20')}`, {
         headers: {
             'Content-Type': 'application/json',
         },

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://resonance-backend.vercel.app';
 
 // Get the Ethereum object from the window (MetaMask)
 export const getEthereumObject = () => {

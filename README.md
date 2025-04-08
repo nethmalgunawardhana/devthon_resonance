@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🎯 Resonance Frontend: Next.js Application
+This is the Next.js frontend application for the Resonance project. It is a dynamic and responsive user interface built with Next.js and Tailwind CSS.
 
-## Getting Started
+🚀 Features
+✅ Responsive and dynamic UI with Tailwind CSS
 
-First, run the development server:
+🔍 AI-powered research recommendation system
 
-```bash
+🔗 Integration with backend APIs and blockchain-based smart contracts
+
+🧠 LLM (Gemini) integration for summarization & recommendations
+
+📄 OpenAlex and Arxiv integration for real-time research data
+
+👨‍🎓 User authentication (Email/Password & Google OAuth)
+
+🪙 Web3 integration with Metawallet for research funding
+
+🌐 Ethereum Sepolia testnet support and smart contract interaction
+
+🛠️ Requirements
+Node.js (v14 or above)
+
+npm or yarn
+
+⚙️ Setup Instructions
+Clone the Repository
+
+bash
+Copy
+Edit
+git clone https://github.com/nethmalgunawardhana/resonance_backend.git
+cd resonance_backend/frontend
+Install Dependencies
+
+bash
+Copy
+Edit
+npm install
+# or
+yarn install
+Configure Environment Variables
+
+Create a .env.local file in the frontend directory:
+
+env
+Copy
+Edit
+NEXT_PUBLIC_BACKEND_API_URL=http://localhost:3000/api
+NEXT_PUBLIC_INFURA_API_KEY=YOUR_INFURA_PROJECT_ID
+NEXT_PUBLIC_CONTRACT_ADDRESS=YOUR_SMART_CONTRACT_ADDRESS
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=YOUR_GOOGLE_CLIENT_ID
+Run the Application
+
+bash
+Copy
+Edit
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Then open http://localhost:3000 in your browser.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🚀 Deployment
+We recommend deploying to Vercel:
+https://vercel.com
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+💻 Tech Stack (Frontend)
+Framework: Next.js
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Styling: Tailwind CSS
 
-## Learn More
+Auth: Firebase Auth, Google OAuth
 
-To learn more about Next.js, take a look at the following resources:
+Blockchain/Web3: Metawallet, Ethereum Sepolia Testnet
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Smart Contracts: Solidity (ResearchFund)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Data Integration: OpenAlex, Arxiv
 
-## Deploy on Vercel
+AI: LLM API (Gemini)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+🧑‍💻 Team Members
+Tharin Edirisinghe
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Garuka Satharasinghe
+
+Nethmal Gunawardhana
+
+Harindu Hadithya
+
+Sachintha Lakmin

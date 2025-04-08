@@ -73,12 +73,12 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
   const fetchResearchers = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/researchers`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://resonance-backend.vercel.app/api'}/researchers`);
       const data = await response.json();
       
       // Log the researcher data with their UIDs
       console.log('Fetched researchers:', data);
-      data.forEach(researcher => {
+      data.forEach((researcher: { firstName: any; uid: any; }) => {
         console.log(`Researcher: ${researcher.firstName}, ID: ${researcher.uid}`);
       });
       
@@ -110,7 +110,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
       try {
         setIsLoading(true);
         // Create a new researcher and get their UID
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/researchers`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://resonance-backend.vercel.app/api'}/researchers`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ const CollaborativeOpportunities: React.FC<CollaborativeOpportunitiesProps> = ({
     
     try {
       setIsLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/researchers`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://resonance-backend.vercel.app/api'}/researchers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

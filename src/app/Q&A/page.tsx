@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect} from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { MessageCircle, ThumbsUp, ThumbsDown, Award, Search, Filter, TrendingUp, Loader, X } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { api } from '../../../services/Q&AService';
@@ -8,6 +8,30 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Question } from '../../types/Q&A';
 import Chatbot from '@/components/Chatbot';
+
+// Create a client component for search params
+interface SearchParamsData {
+  search: string;
+  category: string | null;
+  hasFilters: boolean;
+}
+
+function SearchParamsHandler({ onParamsLoaded }: { onParamsLoaded: (data: SearchParamsData) => void }) {
+  const searchParams = useSearchParams();
+  
+  useEffect(() => {
+    const urlSearch = searchParams?.get('search');
+    const urlCategory = searchParams?.get('category');
+    
+    onParamsLoaded({
+      search: urlSearch || '',
+      category: urlCategory || null,
+      hasFilters: !!(urlSearch || urlCategory)
+    });
+  }, [searchParams, onParamsLoaded]);
+  
+  return null;
+}
 
 export default function QuestionsPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -20,28 +44,22 @@ export default function QuestionsPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [hasAppliedFilters, setHasAppliedFilters] = useState(false);
 
-  const searchParams = useSearchParams();
-
   useEffect(() => {
-   
     fetchAllQuestions();
     
-  
+    // Load saved votes from localStorage
     const savedVotes = localStorage.getItem('userVotes');
     if (savedVotes) {
       setUserVotes(JSON.parse(savedVotes));
     }
-    
-    const urlSearch = searchParams?.get('search');
-    const urlCategory = searchParams?.get('category');
-    
-    if (urlSearch || urlCategory) {
-      if (urlSearch) setSearchQuery(urlSearch);
-      if (urlCategory) setActiveCategory(urlCategory);
-      setHasAppliedFilters(true);
-    }
-  }, [searchParams]);
+  }, []);
 
+  // Handler for URL params
+  const handleParamsLoaded = ({ search, category, hasFilters }: SearchParamsData) => {
+    if (search) setSearchQuery(search);
+    if (category) setActiveCategory(category);
+    if (hasFilters) setHasAppliedFilters(true);
+  };
 
   const fetchAllQuestions = async () => {
     try {
@@ -56,13 +74,11 @@ export default function QuestionsPage() {
     }
   };
 
-  
   const applyFilters = () => {
     setFetchingData(true);
     
     let filteredData = [...allQuestions];
     
- 
     if (searchQuery) {
       filteredData = filteredData.filter(q => 
         q.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -71,18 +87,15 @@ export default function QuestionsPage() {
     }
     
     if (activeCategory) {
-        filteredData = filteredData.filter(q => {
-    
-          if (q.category) {
-            const normalizedCategory = activeCategory.toLowerCase().replace(/[\s_-]/g, '');
-            const normalizedQCategory = q.category.toLowerCase().replace(/[\s_-]/g, '');
-            return normalizedQCategory.includes(normalizedCategory);
-          }
-
-          return q.content.toLowerCase().includes(activeCategory.toLowerCase());
-        });
-      }
-    
+      filteredData = filteredData.filter(q => {
+        if (q.category) {
+          const normalizedCategory = activeCategory.toLowerCase().replace(/[\s_-]/g, '');
+          const normalizedQCategory = q.category.toLowerCase().replace(/[\s_-]/g, '');
+          return normalizedQCategory.includes(normalizedCategory);
+        }
+        return q.content.toLowerCase().includes(activeCategory.toLowerCase());
+      });
+    }
 
     const hasFilters = !!(searchQuery || activeCategory);
     setHasAppliedFilters(hasFilters);
@@ -93,7 +106,6 @@ export default function QuestionsPage() {
 
   const handleVote = async (questionId: string, value: 1 | -1) => {
     try {
-
       const currentVote = userVotes[questionId] || 0;
       const newVote = currentVote === value ? 0 : value;
 
@@ -101,7 +113,6 @@ export default function QuestionsPage() {
       if (newVote !== 0) {
         updatedQuestion = await api.voteQuestion(questionId, newVote);
       } else {
-
         updatedQuestion = await api.voteQuestion(questionId, currentVote === 1 ? -1 : 1);
       }
 
@@ -128,14 +139,11 @@ export default function QuestionsPage() {
   };
 
   const handleCategoryClick = (category: string) => {
-
     const newCategory = activeCategory === category ? null : category;
     setActiveCategory(newCategory);
-  
   };
 
   const handleShowAllQuestions = () => {
- 
     setSearchQuery('');
     setActiveCategory(null);
     setHasAppliedFilters(false);
@@ -144,18 +152,13 @@ export default function QuestionsPage() {
 
   const clearSearch = () => {
     if (!searchQuery) return;
-    
     setSearchQuery('');
-
   };
 
-
   useEffect(() => {
-
     if (loading) return;
-    
     applyFilters();
-  }, [searchQuery, activeCategory]);
+  }, [searchQuery, activeCategory, loading]);
 
   if (loading) {
     return (
@@ -200,15 +203,20 @@ export default function QuestionsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Suspense boundary for SearchParams */}
+      <Suspense fallback={null}>
+        <SearchParamsHandler onParamsLoaded={handleParamsLoaded} />
+      </Suspense>
+      
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-          <Link href="/">
-            <div className="flex items-center cursor-pointer">
-              <img src="/logo.png" alt="Resonance Logo" className="h-8 mr-2" />
-            </div>
-          </Link>
+            <Link href="/">
+              <div className="flex items-center cursor-pointer">
+                <img src="/logo.png" alt="Resonance Logo" className="h-8 mr-2" />
+              </div>
+            </Link>
             <form onSubmit={handleSearch} className="relative flex-1 max-w-lg mx-8">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-900 h-5 w-5" />
               <input
@@ -326,7 +334,6 @@ export default function QuestionsPage() {
 
             {/* Question Cards - with in-place loading state */}
             <div className="relative">
-         
               {fetchingData && (
                 <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10 rounded-lg">
                   <div className="flex flex-col items-center">
@@ -336,7 +343,6 @@ export default function QuestionsPage() {
                 </div>
               )}
               
-          
               {(questions.length === 0 && hasAppliedFilters) ? (
                 <div className="bg-white rounded-lg shadow p-12 text-center">
                   <div className="inline-block p-6 rounded-full bg-gray-100 mb-4">
@@ -442,8 +448,7 @@ export default function QuestionsPage() {
                   
                   <div className="flex justify-center mt-6">
                     <Chatbot />
-                    </div>
-
+                  </div>
                 </div>
               )}
             </div>

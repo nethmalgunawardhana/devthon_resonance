@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://resonance-backend.vercel.app';
 
 /**
  * Sends a user message to the backend API and returns the response
