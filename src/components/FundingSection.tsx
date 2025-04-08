@@ -46,10 +46,14 @@ const FundingSection = () => {
           <span className="ml-auto text-sm font-medium text-gray-500">29</span>
         </div>
         
-        <button className="w-full bg-[#770C0C] text-white py-3 rounded-md font-medium mb-3
-          hover:bg-[#770C0C]/80 transition duration-200 ease-in-out">
-          Fund This Research
-        </button>
+        <button
+  onClick={() => window.location.href = "https://buy.stripe.com/test_cN2dTTf5Z5cX5BC6oo"}
+  className="w-full bg-[#770C0C] text-white py-3 rounded-md font-medium mb-3
+             hover:bg-[#770C0C]/80 transition duration-200 ease-in-out"
+>
+  Fund This Research
+</button>
+
         
         {/* <button className="w-full  text-[#770C0C]  bg-[#FFEEE8] py-3 rounded-md font-medium mb-3">
           Request To Collaborate
