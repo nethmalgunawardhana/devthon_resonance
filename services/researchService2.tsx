@@ -67,7 +67,9 @@ export const fetchTrendingResearchProjects = async (): Promise<ResearchProject[]
 
 export const fetchResearchProjectForResearcher = async (id: string): Promise<ResearchProject[]> => {
   try {
+
     const response = await fetch(`https://resonance-backend.vercel.app/api/local-papers/${id}`); 
+
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

@@ -20,7 +20,9 @@ export interface OpenAlexResearcher{
 
 export const getOpenAlexResearcher = async (query: string): Promise<OpenAlexResearcher> => {
     try {
+
         const response = await fetch(`https://resonance-backend.vercel.app/api/alex/researchers?name=${query}`);
+
         if (!response.ok) {
         throw new Error('Failed to fetch researchers from OpenAlex');
         }

@@ -15,6 +15,7 @@ import { getOpenAlexResearcher, OpenAlexResearcher } from "../../../services/ope
 import { fetchResearchProjectForResearcher, ResearchProject } from "../../../services/researchService2" 
 import ResearchCard from "@/components/ResearchCard";
 
+
 // Client component that uses search params
 function ResearcherProfileContent() {
   const [activeTab, setActiveTab] = useState("researches");
@@ -61,6 +62,7 @@ function ResearcherProfileContent() {
         setLoading(false);
       }
     };
+
 
     if (uid) {
       loadData();
@@ -116,6 +118,7 @@ function ResearcherProfileContent() {
                     className="flex items-center text-sm text-gray-600 border border-gray-200 rounded px-3 py-1
                     hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:scale-95 transition"
                     onClick={handleCopyUrl}
+
                   >
                     <FaCopy className="h-4 w-4 text-gray-600 mr-2" />
                     {copied ? "Copied!" : "Copy URL"}
@@ -131,6 +134,7 @@ function ResearcherProfileContent() {
                     hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:scale-95 transition"
                     onClick={() => window.open(`mailto:${researcher.email}`, "_blank")}
                   >
+
                     <MdEmail className="h-4 w-4 text-gray-600" />
                   </button>
                   <button className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:scale-95 transition">
@@ -150,6 +154,7 @@ function ResearcherProfileContent() {
             <div className="lg:w-1/3 pr-10">
               <h2 className="text-xl font-semibold mb-4">ABOUT RESEARCHER</h2>
               <p className="text-gray-600 text-sm leading-6">{researcher.about}</p>
+
             </div>
 
             {/* Tabs & Cards */}
@@ -222,13 +227,17 @@ function ResearcherProfileContent() {
               </div>
             </div>
           </div>
+
         </div>
       )}
+
+
 
       <Footer />
     </div>
   );
 }
+
 
 // Main component with suspense boundary
 export default function ResearcherProfile() {
@@ -238,3 +247,4 @@ export default function ResearcherProfile() {
     </Suspense>
   );
 }
+

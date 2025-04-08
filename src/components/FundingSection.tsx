@@ -63,9 +63,25 @@ const FundingSection: React.FC<FundingSectionProps> = ({ project }) => {
     });
   };
 
-  const handlePayment = () => {
+    
+
+  const handlePayment = async () => {
     if (paymentMethod === 'stripe') {
-      window.location.href = "https://buy.stripe.com/test_cN2dTTf5Z5cX5BC6oo";
+      const res = await fetch(`${API_BASE_URL}/stripe/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectDocId: researchProject?.id,
+          userId: researchProject?.createdBy,
+        }),
+      });
+    
+      const data = await res.json();
+
+      console.log(data)
+      window.location.href = data.data.url;
     } 
   };
 
