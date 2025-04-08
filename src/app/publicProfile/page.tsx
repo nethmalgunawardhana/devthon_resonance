@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Footer from "@/components/footer";
 
 export default function PublicProfile() {
   const [userData, setUserData] = useState(null); // Researcher details
