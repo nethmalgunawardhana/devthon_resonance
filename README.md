@@ -1,60 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎯 Resonance Backend: Node.js for Stripe & Firestore
 
----------- SETUP INSTRUCTIONS ----------
+This is the Node.js backend application for the Resonance project, designed to handle Stripe payment transactions and store related data in Firebase Firestore. It includes a secure Stripe webhook endpoint to automatically capture and log payment events.
 
-## Getting Started
+## 🚀 Features
 
-First, run the development server:
+-   ✅  Record Stripe payment transactions manually or via webhook
+-   🔒  Secure Stripe webhook verification
+-   🗃️  Store transactions in Firestore under `research/{projectDocId}/stripeTransactions`
+-   📦  Built using plain Node.js
+-   🔧  Environment variable support via `.env`
+-   💽  LLM API (Gemini) for AI-powered research summarization and insights
+-   🔍  Google Scholar for real-time research paper indexing
+-    💰 Stripe integration for payments, donations, grant distribution
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠️ Requirements
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+-   Node.js (v14 or above)
+-   npm or yarn
+-   Firebase Admin SDK service account key file (path to your JSON key)
+-   Stripe account with webhook secret
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⚙️ Setup Instructions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1.  **Clone the Repository**
 
-## Learn More
+    ```bash
+    git clone [https://github.com/nethmalgunawardhana/resonance_backend.git](https://github.com/nethmalgunawardhana/resonance_backend.git)
+    cd resonance_backend
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+2.  **Install Dependencies**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3.  **Configure Environment Variables**
 
-## Deploy on Vercel
+    Create a `.env` file in the root of the backend directory and add the following (replace with your actual values):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    ```
+    STRIPE_SECRET_KEY=sk_live_your_live_secret_key
+    STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+    FIREBASE_SERVICE_ACCOUNT_PATH=/path/to/your/serviceAccountKey.json
+    GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+    # Add other necessary environment variables
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    **Important:** Do not commit your `.env` file to version control. Add it to your `.gitignore` file.
 
+4.  **Run the Backend**
 
+    ```bash
+    npm run start #  Or the script defined for starting the backend in your package.json
+    # or
+    node index.js
+    ```
 
----------- TECH STACK ----------
+    Refer to your `package.json` file for available scripts.  You might need to set up a start script.
 
-* Frontend  : Next.js with TailwindCSS (for responsive, dynamic UI)
-* Backend   : Node.js (Express)
-* Database : Firebase Firestore 
-* AI/ML & Integration:
-    - LLM API (Gemini) for AI-powered research summarization and insights
-    - Google Scholar for real-time research paper indexing
-* Blockchain & Payments:
-    - Stripe integration and Blockchain for payments, donations, grant distribution
-* Deployment & Scaling 
-    - Vercel
+## ⚙️ Configuration
 
+-   **Stripe:** Ensure your Stripe webhook endpoint is configured to send relevant events to your backend's webhook URL.
+-   **Firebase:** Make sure your Firebase Admin SDK is initialized correctly using the provided service account key.
+-   **Gemini:** If using the LLM features, ensure your Gemini API key is correctly set in the `.env` file.
 
+## ---------- TECH STACK (Backend) ----------
 
----------- TEAM MEMEBERS ----------
+* Backend: Node.js
+* Database: Firebase Firestore
+* Payments: Stripe
+* AI/ML Integration: LLM API (Gemini)
+* Research Indexing: Google Scholar Integration
+
+## ---------- DEPLOYMENT ----------
+* Deployment & Scaling: Vercel (verify and update as needed)
+
+## ---------- TEAM MEMBERS ----------
 
 * Tharin Edirisinghe
 * Garuka Satharasinghe
