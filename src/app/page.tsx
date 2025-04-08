@@ -15,9 +15,9 @@ export default function Home() {
       <div className="pt-18">
         {/* Hero Section */}
         <section className="relative bg-white">
-          <div className="flex flex-col md:flex-row items-stretch h-[80vh]">
+          <div className="flex flex-col-reverse md:flex-row items-stretch h-[80vh]">
             {/* Left Content */}
-            <div className="md:w-1/2 flex flex-col justify-center px-8 md:px-12">
+            <div className="md:w-1/2 flex flex-col justify-center px-8 md:px-12 py-8 md:py-0">
               <h1 className="text-5xl font-bold text-gray-800 leading-tight">
                 Breakthrough science through collaboration
               </h1>
@@ -32,11 +32,11 @@ export default function Home() {
             </div>
 
             {/* Right Image */}
-            <div className="md:w-1/2 relative">
+            <div className="md:w-1/2 relative h-96 md:h-auto max-md:bg-[#770C0C]">
               <div
-                className="absolute inset-0 bg-cover bg-center"
+                className="absolute inset-0 bg-cover bg-center "
                 style={{
-                  backgroundImage: "url('/hero-image.jpg')", // Replace with your image path
+                  backgroundImage: "url('/hero-image.jpg')",
                   clipPath: "polygon(0 0, 100% 0, 100% 100%, 10% 100%)",
                 }}
               ></div>
