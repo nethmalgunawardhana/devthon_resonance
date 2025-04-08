@@ -1,12 +1,16 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/footer';
+import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/footer";
 
-import { FaFlask, FaBook, FaChartLine, FaClipboardList } from 'react-icons/fa';
-import { GiMagnifyingGlass, GiChemicalDrop, GiArchiveResearch } from 'react-icons/gi';
-import { MdOutlineScience } from 'react-icons/md';
+import { FaFlask, FaBook, FaChartLine, FaClipboardList } from "react-icons/fa";
+import {
+  GiMagnifyingGlass,
+  GiChemicalDrop,
+  GiArchiveResearch,
+} from "react-icons/gi";
+import { MdOutlineScience } from "react-icons/md";
 
 export default function Home() {
   return (
@@ -22,7 +26,9 @@ export default function Home() {
                 Breakthrough science through collaboration
               </h1>
               <p className="mt-4 text-lg text-gray-600">
-                We bring great minds together to collaborate, secure funding, and connect with researchers to drive groundbreaking discoveries.
+                We bring great minds together to collaborate, secure funding,
+                and connect with researchers to drive groundbreaking
+                discoveries.
               </p>
               <div className="mt-6">
                 <button className="bg-[#770C0C] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#5d0a0a] transition">
@@ -46,28 +52,68 @@ export default function Home() {
 
         {/* Research Categories */}
         <section className="container mx-auto p-16">
-          <h2 className="text-3xl font-bold text-gray-800 text-center">Browse top research category</h2>
+          <h2 className="text-3xl font-bold text-gray-800 text-center">
+            Browse top research category
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
             {[
-              { name: 'Applied Research', icon: <FaFlask className="text-[#770C0C] text-2xl" /> },
-              { name: 'Basic Research', icon: <FaBook className="text-[#770C0C] text-2xl" /> },
-              { name: 'Correlational Research', icon: <FaChartLine className="text-[#770C0C] text-2xl" /> },
-              { name: 'Descriptive Research', icon: <FaClipboardList className="text-[#770C0C] text-2xl" /> },
-              { name: 'Grounded Theory', icon: <GiMagnifyingGlass className="text-[#770C0C] text-2xl" /> },
-              { name: 'Exploratory Research', icon: <GiChemicalDrop className="text-[#770C0C] text-2xl" /> },
-              { name: 'Experimental Research', icon: <MdOutlineScience className="text-[#770C0C] text-2xl" /> },
-              { name: 'Ethnographic Research', icon: <GiArchiveResearch className="text-[#770C0C] text-2xl" /> },
-              { name: 'Historical Research', icon: <FaBook className="text-[#770C0C] text-2xl" /> },
-              { name: 'Phenomenological Research', icon: <FaFlask className="text-[#770C0C] text-2xl" /> },
-              { name: 'Qualitative Research', icon: <FaChartLine className="text-[#770C0C] text-2xl" /> },
-              { name: 'Quantitative Research', icon: <FaClipboardList className="text-[#770C0C] text-2xl" /> },
+              {
+                name: "Applied Research",
+                icon: <FaFlask className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Basic Research",
+                icon: <FaBook className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Correlational Research",
+                icon: <FaChartLine className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Descriptive Research",
+                icon: <FaClipboardList className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Grounded Theory",
+                icon: <GiMagnifyingGlass className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Exploratory Research",
+                icon: <GiChemicalDrop className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Experimental Research",
+                icon: <MdOutlineScience className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Ethnographic Research",
+                icon: <GiArchiveResearch className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Historical Research",
+                icon: <FaBook className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Phenomenological Research",
+                icon: <FaFlask className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Qualitative Research",
+                icon: <FaChartLine className="text-[#770C0C] text-2xl" />,
+              },
+              {
+                name: "Quantitative Research",
+                icon: <FaClipboardList className="text-[#770C0C] text-2xl" />,
+              },
             ].map((category, index) => (
               <div
                 key={index}
                 className="bg-gray-100 p-4 hover:shadow-lg transition flex flex-col items-center text-center"
               >
                 {category.icon}
-                <h3 className="text-md font-semibold text-gray-800 mt-2">{category.name}</h3>
+                <h3 className="text-md font-semibold text-gray-800 mt-2">
+                  {category.name}
+                </h3>
                 <p className="text-sm text-gray-600">12,345 Researchers</p>
               </div>
             ))}
@@ -77,7 +123,9 @@ export default function Home() {
         {/* Trending Research */}
         <section className="bg-gray-50 p-20">
           <div className="container mx-auto">
-            <h2 className="text-3xl font-bold text-gray-800 text-center">Trending Research</h2>
+            <h2 className="text-3xl font-bold text-gray-800 text-center">
+              Trending Research
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
               {Array(8)
                 .fill(0)
@@ -106,14 +154,16 @@ export default function Home() {
 
         {/* Key Features */}
         <section className="container mx-auto p-20">
-          <h2 className="text-3xl font-bold text-gray-800 text-center">Key Features</h2>
+          <h2 className="text-3xl font-bold text-gray-800 text-center">
+            Key Features
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-8">
             {[
-              'AI-Driven Research Discovery',
-              'Decentralized Research Funding',
-              'Q&A Forum',
-              'Industry-Academia Integration',
-              'Mentorship and Knowledge Base',
+              "AI-Driven Research Discovery",
+              "Decentralized Research Funding",
+              "Q&A Forum",
+              "Industry-Academia Integration",
+              "Mentorship and Knowledge Base",
             ].map((feature, index) => (
               <div
                 key={index}
@@ -126,7 +176,9 @@ export default function Home() {
                   height={50}
                   className="mx-auto"
                 />
-                <h3 className="mt-4 text-lg font-semibold text-gray-800">{feature}</h3>
+                <h3 className="mt-4 text-lg font-semibold text-gray-800">
+                  {feature}
+                </h3>
               </div>
             ))}
           </div>
@@ -134,65 +186,74 @@ export default function Home() {
 
         {/* Create New Research and Fund a Research Section */}
         <section className="container mx-auto py-16 px-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-32 py-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-8 md:px-32 py-16">
             {/* Create New Research */}
-            <div className="flex flex-col items-start">
-              <h2 className="text-3xl font-bold text-gray-800">Create New Research</h2>
-              <p className="mt-4 text-gray-600">
-                Turn your ideas into impactful research projects. Connect with a network of experts, access essential resources, and bring your vision to life with global collaboration.
+            <div className="flex flex-col items-center md:items-start">
+              <div className="flex justify-center md:hidden mb-4">
+              <Image
+                src="/icon.png"
+                alt="Create Research Icon"
+                width={100}
+                height={100}
+                className="rounded-lg"
+              />
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center md:text-left">
+              Create New Research
+              </h2>
+              <p className="mt-4 text-gray-600 text-sm md:text-base text-center md:text-left">
+              Turn your ideas into impactful research projects. Connect with a
+              network of experts, access essential resources, and bring your
+              vision to life with global collaboration.
               </p>
               <button className="mt-6 bg-[#770C0C] text-white py-2 px-6 rounded-lg font-semibold hover:bg-[#5d0a0a] transition">
-                Get Started
+              Get Started
               </button>
             </div>
-            <div className="flex justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 64 64"
-                className="w-64 h-64"
-                fill="none"
-              >
-                <rect x="10" y="10" width="44" height="44" rx="4" fill="#FDECEC" />
-                <path
-                  d="M20 20h24v4H20zM20 28h24v4H20zM20 36h16v4H20z"
-                  fill="#770C0C"
-                />
-                <circle cx="48" cy="48" r="6" fill="#770C0C" />
-                <path
-                  d="M46 46h4v4h-4z"
-                  fill="#fff"
-                />
-              </svg>
+            <div className="hidden md:flex justify-center">
+              <Image
+              src="/icon.png"
+              alt="Create Research Icon"
+              width={150}
+              height={150}
+              className="rounded-lg md:w-[200px] md:h-[200px]"
+              />
             </div>
-          </div>
+            </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center m-16">
             {/* Fund a Research */}
             <div className="flex justify-center">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 64 64"
+                fill="#770C0C"
+                version="1.1"
                 className="w-64 h-64"
-                fill="none"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 245"
+                enable-background="new 0 0 256 245"
+                stroke="#770C0C"
               >
-                <path
-                  d="M32 4C17.64 4 6 15.64 6 30s11.64 26 26 26 26-11.64 26-26S46.36 4 32 4zm0 48c-12.15 0-22-9.85-22-22S19.85 8 32 8s22 9.85 22 22-9.85 22-22 22z"
-                  fill="#FDECEC"
-                />
-                <path
-                  d="M32 16c-7.73 0-14 6.27-14 14s6.27 14 14 14 14-6.27 14-14-6.27-14-14-14zm0 24c-5.52 0-10-4.48-10-10s4.48-10 10-10 10 4.48 10 10-4.48 10-10 10z"
-                  fill="#770C0C"
-                />
-                <path
-                  d="M28 28h8v8h-8z"
-                  fill="#fff"
-                />
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  {" "}
+                  <path d="M192.498,113.8c9.278,0,16.8,7.522,16.8,16.8s-7.522,16.8-16.8,16.8s-16.8-7.522-16.8-16.8S183.22,113.8,192.498,113.8z M171.798,155.6c9.278,0,16.8,7.522,16.8,16.8s-7.522,16.8-16.8,16.8s-16.8-7.522-16.8-16.8S162.52,155.6,171.798,155.6z M144.998,192.3h-18.9h-18.9c-11.5,0-18.7,9.5-18.7,21.4V243h12.9v-25.9c0-1.2,1-2,2-2c1.2,0,2,0.8,2,2v25.8h41.5v-25.8 c0-1.2,1-2,2-2c1.2,0,2,1,2,2v25.8h12.9v-29.1C163.998,201.8,156.698,192.3,144.998,192.3z M149.698,113.8 c9.278,0,16.8,7.522,16.8,16.8s-7.522,16.8-16.8,16.8s-16.8-7.522-16.8-16.8S140.42,113.8,149.698,113.8z M199.098,172.4 c0,9.3,7.5,16.8,16.8,16.8s16.8-7.5,16.8-16.8s-7.5-16.8-16.8-16.8S199.098,163.1,199.098,172.4z M197.398,192.3 c-11.5,0-18.7,9.5-18.7,21.4V243h12.9v-25.9c0-1.2,1-2,2-2c1.2,0,2,0.8,2,2v25.8h41.5v-25.8c0-1.2,1-2,2-2c1.2,0,2,1,2,2v25.8h12.9 v-29.1c0.2-12.1-7.1-21.6-18.7-21.6h-18.9h-19V192.3z M39.798,155.6c9.278,0,16.8,7.522,16.8,16.8s-7.522,16.8-16.8,16.8 s-16.8-7.522-16.8-16.8S30.52,155.6,39.798,155.6z M14.798,242.9v-25.8c0-1.2,1-2,2-2c1.2,0,2,0.8,2,2v25.8h41.5v-25.8 c0-1.2,1-2,2-2c1.2,0,2,1,2,2v25.8h12.9v-29.1c0.2-12.1-7.1-21.6-18.7-21.6h-18.9h-18.9c-11.5,0-18.7,9.5-18.7,21.4v29.3 L14.798,242.9L14.798,242.9z M109.298,172.4c0,9.3,7.5,16.8,16.8,16.8c9.3,0,16.8-7.5,16.8-16.8s-7.5-16.8-16.8-16.8 S109.298,163.1,109.298,172.4z M61.298,113.8c9.278,0,16.8,7.522,16.8,16.8s-7.522,16.8-16.8,16.8s-16.8-7.522-16.8-16.8 S52.02,113.8,61.298,113.8z M106.698,113.8c9.278,0,16.8,7.522,16.8,16.8s-7.522,16.8-16.8,16.8s-16.8-7.522-16.8-16.8 S97.42,113.8,106.698,113.8z M84.098,155.6c9.278,0,16.8,7.522,16.8,16.8s-7.522,16.8-16.8,16.8s-16.8-7.522-16.8-16.8 S74.82,155.6,84.098,155.6z M127.933,93c25.038,0,45.5-20.327,45.5-45.5S153.106,2,127.933,2S82.567,22.462,82.567,47.635 C82.567,72.673,102.894,93,127.933,93z M125.42,51.359c-8.346-2.917-13.551-7.135-13.551-14.628c0-6.91,4.577-12.34,12.968-14.045 v-7.494h6.282v7.135c5.205,0,8.974,1.077,11.756,2.558l-2.558,8.974c-2.064-0.853-5.429-2.288-10.051-2.288 c-4.622,0-7.135,2.288-7.135,4.577c0,3.141,2.917,4.353,9.199,6.91c8.571,3.141,12.564,7.494,12.564,14.628 s-4.353,12.564-13.551,14.628v7.135h-6.282v-6.91c-5.429,0-10.904-1.436-13.551-2.917l2.288-9.199 c2.917,1.436,7.494,3.141,12.34,3.141c5.205,0,7.763-2.288,7.763-5.429S131.433,53.692,125.42,51.359z"></path>{" "}
+                </g>
               </svg>
             </div>
             <div className="flex flex-col items-start">
-              <h2 className="text-3xl font-bold text-gray-800">Fund a Research</h2>
+              <h2 className="text-3xl font-bold text-gray-800">
+                Fund a Research
+              </h2>
               <p className="mt-4 text-gray-600">
-                Support groundbreaking research and drive innovation. Contribute to projects that align with your interests and help researchers make meaningful discoveries.
+                Support groundbreaking research and drive innovation. Contribute
+                to projects that align with your interests and help researchers
+                make meaningful discoveries.
               </p>
               <button className="mt-6 bg-[#770C0C] text-white py-2 px-6 rounded-lg font-semibold hover:bg-[#5d0a0a] transition">
                 Get Started
@@ -201,7 +262,7 @@ export default function Home() {
           </div>
         </section>
 
-       <Footer />
+        <Footer />
       </div>
     </div>
   );
