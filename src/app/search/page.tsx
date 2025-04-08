@@ -7,7 +7,7 @@ import { fetchResearchProjects, ResearchProject, fetchTrendingResearchProjects }
 import { getResearcherById } from "../../../services/researcherIdService";
 import { fetchPublishedResearches, ResearchItem } from "../../../services/arxivService";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Footer from "@/components/footer";
 
 export default function Search() {
   const [researchProjects, setResearchProjects] = useState<ResearchProject[]>([]);

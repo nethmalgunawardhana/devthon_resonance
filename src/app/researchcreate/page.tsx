@@ -3,7 +3,7 @@ import React from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Footer from '@/components/footer';
 import dynamic from 'next/dynamic';
 
 // Dynamically import ResearchCreate with no SSR
