@@ -60,7 +60,7 @@ export default function Search() {
 
   return (
     <div className="bg-white min-h-screen">
-         <Navbar />
+    <Navbar />
     <div className="min-h-screen bg-white p-10">
    
       {/* Search Bar */}
