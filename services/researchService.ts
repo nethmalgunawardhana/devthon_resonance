@@ -28,6 +28,10 @@ export const researchService = {
     data.advanceInfo.keyInformation.forEach((item, index) => {
       if (item) formData.append(`keyInformation[${index}]`, item);
     });
+
+    // Ethereum funding info
+    formData.append('isEthereumFundingEnabled', data.advanceInfo.isEthereumFundingEnabled.toString());
+    formData.append('ethereumAddress', data.advanceInfo.ethereumAddress || ''); // Handle empty string
     
     // Add collaborative info
     formData.append('allowCollaboratorRequests', data.collaborativeInfo.allowCollaboratorRequests.toString());
@@ -85,6 +89,11 @@ export const researchService = {
     data.advanceInfo.keyInformation.forEach((item, index) => {
       if (item) formData.append(`keyInformation[${index}]`, item);
     });
+
+    // Ethereum funding info
+    formData.append('isEthereumFundingEnabled', data.advanceInfo.isEthereumFundingEnabled.toString());
+    formData.append('ethereumAddress', data.advanceInfo.ethereumAddress || ''); // Handle empty string
+
     
     // Add collaborative info
     formData.append('allowCollaboratorRequests', data.collaborativeInfo.allowCollaboratorRequests.toString());
