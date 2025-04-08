@@ -1,10 +1,14 @@
 export interface ResearchProject {
-  id: number;
+  id: string;
   title: string;
   description: string;
   category: string;
   createdAt:  {_seconds: number, nanoseconds: number};
   fundingGoal: number;
+  isEthereumFundingEnabled : boolean;
+  ethereumAddress : string;
+  onChainProjectId : string;
+  onChainTransactionHash : string;
   team: string[];
   createdBy: string;
   allowCollaboratorRequests: boolean;
