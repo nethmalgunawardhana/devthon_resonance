@@ -122,14 +122,14 @@ export default function AllTransactionHistory({
                                   </>
                                 )}
                                 </div>
-                              ) : tx.type === 'stripe' ? 'Stripe/Card' : 'Unknown'}
+                              ) : tx.type === 'stripe/card' ? 'Stripe/Card' : tx.type }
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {tx.user ? (
                                 <div className="flex items-center space-x-2">
                                   <span>{truncateAddress(tx.user)}</span>
-                                  <button 
+                                  {/* <button 
                                     onClick={() => copyToClipboard(tx.user? tx.user : "")}
                                     className="text-gray-400 hover:text-gray-600 transition-colors"
                                     title="Copy address"
@@ -148,7 +148,7 @@ export default function AllTransactionHistory({
                                     title="View on Etherscan"
                                   >
                                     <AiOutlineLink />
-                                  </a>
+                                  </a> */}
                                 </div>
                               ) : (
                                 <span>-</span>
