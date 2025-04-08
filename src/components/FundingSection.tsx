@@ -87,7 +87,7 @@ const FundingSection = () => {
           <button className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded
             hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:scale-95 transition"
             onClick={() => {
-              const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent("https://voluntrix-preview.vercel.app/")}`;
+              const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
               window.open(linkedInShareUrl, "_blank");
             }}
           >

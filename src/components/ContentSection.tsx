@@ -31,6 +31,8 @@ const ContentSection: React.FC<ContentSectionProps> = ({ details, researchers })
         <div className="flex items-center text-sm text-gray-500 mb-4">
           <span>Home</span>
           <span className="mx-2">›</span>
+          <span>Researches</span>
+          <span className="mx-2">›</span>
           <span>{details.category}</span>
         </div>
 
@@ -59,6 +61,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ details, researchers })
               src={details.trailerVideoUrl}
               controls
               className="w-full h-auto rounded"
+              onError={() => console.error("Failed to load video:", details.trailerVideoUrl)}
             >
               Your browser does not support the video tag.
             </video>
