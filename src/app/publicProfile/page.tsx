@@ -26,6 +26,7 @@ function ResearcherProfileContent() {
   const [loading, setLoading] = useState(true);
   const [openAlexData, setOpenAlexData] = useState<OpenAlexResearcher>();
   const [researchProjects, setResearchProjects] = useState<ResearchProject[]>([]);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
 
   const handleCopyUrl = () => {
     navigator.clipboard
@@ -45,7 +46,8 @@ function ResearcherProfileContent() {
       try {
         const response = await getResearcherById(uid);
         setResearcher(response);
-
+        const loggedInUserId = localStorage.getItem('userId');
+        setIsOwnProfile(loggedInUserId === uid);
         try {
           const openAlexData = await getOpenAlexResearcher(response.firstName);
           setOpenAlexData(openAlexData);
@@ -114,6 +116,14 @@ function ResearcherProfileContent() {
               <div className="mt-4">
                 <p className="text-sm text-[#1D2026] mb-3">Share this profile or Connect:</p>
                 <div className="flex space-x-3">
+                    {isOwnProfile && (
+                  <button
+                       className="flex items-center text-sm text-white bg-[#710314] border border-[#d40640] rounded px-4 py-1.5
+                        hover:bg-[#f48b8b] active:bg-[#d94d27] active:scale-95 transition"
+                     >
+                   Update Profile
+                 </button>
+                  )}
                   <button
                     className="flex items-center text-sm text-gray-600 border border-gray-200 rounded px-3 py-1
                     hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:scale-95 transition"

@@ -126,7 +126,7 @@ export default function Search() {
       {!loading && trendingResearchProjects.length > 0 && (
         <div className="px-8 py-10">
           <h2 className="text-2xl font-semibold mb-6 text-[#1D2026]">Trending Researches</h2>
-          <div className="flex flex-wrap gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
             {trendingResearchProjects.map((project) => (
               <ResearchCard key={project.id} project={project} />
             ))}
