@@ -15,6 +15,7 @@ const ResearchCreate = dynamic(
 
 const CreateResearchPage: NextPage = () => {
     return (
+        <>
         <div className="bg-white">
             <Head>
                 <title>Create Research</title>
@@ -27,6 +28,7 @@ const CreateResearchPage: NextPage = () => {
             </div>
             <Footer />
         </div>
+        </>
     );
 }
 
