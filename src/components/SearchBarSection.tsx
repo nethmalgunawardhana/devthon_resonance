@@ -3,12 +3,13 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { RxAvatar } from "react-icons/rx";
-// import { fetchPublishedResearches } from "../../services/arxivService";
+import { getAllResearchers } from "../../services/researcherIdService"; 
 
 type Researcher = {
+  uid: string;
   name: string;
   university: string;
-  imageUrl?: string;
+  imageUrl: string;
 };
 
 type SearchBarSectionProps = {
@@ -30,20 +31,6 @@ const ResearchCategories = [
   "High Energy Physics",
 ];
 
-const mockResearchers: Researcher[] = [
-  {
-    name: "Jane Doe",
-    university: "University of Innovation",
-  },
-  {
-    name: "John Smith",
-    university: "Global Research Institute",
-  },
-  {
-    name: "Emily Zhang",
-    university: "Tech University",
-  },
-];
 
 const SearchBarSection = ({onSearch}: SearchBarSectionProps) => {
   const [filter, setFilter] = useState("Research Papers");
@@ -75,10 +62,28 @@ const SearchBarSection = ({onSearch}: SearchBarSectionProps) => {
 
   useEffect(() => {
     if (filter === "Researches" && searchQuery.trim()) {
-      const matches = mockResearchers.filter((r) =>
-        r.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setSuggestions(matches);
+      const fetchResearchers = async () => {
+        try {
+          const researchers = await getAllResearchers();
+          const matches = researchers.filter((researcher) =>
+            `${researcher.firstName} ${researcher.lastName}`
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          );
+          setSuggestions(
+            matches.map((researcher) => ({
+              uid: researcher.uid,
+              name: `${researcher.firstName} ${researcher.lastName}`,
+              university: "Unknown University",
+              imageUrl: researcher.imageUrl || "",
+            }))
+          );
+        }
+        catch (error) { 
+          console.error("Error fetching researchers:", error);
+        }
+      }
+      fetchResearchers();
       setShowSuggestions(true);
     } else if (filter === "Research Papers" && searchQuery.trim()) {
       const matches = ResearchCategories.filter((category) =>
@@ -86,8 +91,10 @@ const SearchBarSection = ({onSearch}: SearchBarSectionProps) => {
       );
       setSuggestions(
         matches.map((category) => ({
+          uid: "",
           name: category,
           university: "",
+          imageUrl: "",
         }))
       );
       setShowSuggestions(true);
@@ -98,12 +105,14 @@ const SearchBarSection = ({onSearch}: SearchBarSectionProps) => {
 
   const handleSearch = () => {
     onSearch(searchQuery);
+
   };
 
-  const handleSelectResearcher = (name: string) => {
-    setSearchQuery(name);
+  const handleSelectResearcher = (item: Researcher) => {
+    setSearchQuery(item.name);
     setShowSuggestions(false);
-    router.push(`/profile/${encodeURIComponent(name)}`);
+    console.log(item.imageUrl);
+    router.push(`/publicProfile?id=${encodeURIComponent(item.uid)}`);
   };
 
   const handleSelectCategory = (category: string) => {
@@ -113,7 +122,7 @@ const SearchBarSection = ({onSearch}: SearchBarSectionProps) => {
   };
 
   return (
-    <div className="w-full bg-white py-10 px-4 text-center relative" ref={searchBarRef}>
+    <div className="w-full bg-white py-10 px-4 text-center relative " ref={searchBarRef}>
       <h1 className="text-3xl font-semibold mb-1 text-[#1D2026]">
         Breakthrough Science Through Collaboration
       </h1>
@@ -167,7 +176,7 @@ const SearchBarSection = ({onSearch}: SearchBarSectionProps) => {
                   key={item.name}
                   onClick={() =>
                     filter === "Researches"
-                      ? handleSelectResearcher(item.name)
+                      ? handleSelectResearcher(item)
                       : handleSelectCategory(item.name)
                   }
                   className="px-4 py-3 flex items-center gap-3 hover:bg-gray-100 cursor-pointer"
@@ -180,7 +189,7 @@ const SearchBarSection = ({onSearch}: SearchBarSectionProps) => {
                       className="w-10 h-10 rounded-full object-cover"
                     />
                   ) : filter === "Researches" ? (
-                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full text-[#1D2026] bg-gray-200 flex items-center justify-center">
                       <RxAvatar size={24} />
                     </div>
                   ) : null}
