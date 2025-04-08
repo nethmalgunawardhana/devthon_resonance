@@ -3,7 +3,7 @@ import { fundProject, getEthereumObject } from "../../services/ethereumService";
 import Image from "next/image";
 import { AiOutlineWallet } from "react-icons/ai"; // Wallet icon
 
-export default function FundProjectBlockchainModal({ projectId }: { projectId: number }) {
+export default function FundProjectBlockchainModal({ projectId, projectDocId }: { projectId: number, projectDocId: string }) {
   const [amountEth, setAmountEth] = useState("0.01");
   const [isFunding, setIsFunding] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +12,7 @@ export default function FundProjectBlockchainModal({ projectId }: { projectId: n
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isFetchingEthPrice, setIsFetchingEthPrice] = useState(true); // Loading state for ETH price
+
 
   useEffect(() => {
     const fetchWalletAddress = async () => {
@@ -66,7 +67,7 @@ export default function FundProjectBlockchainModal({ projectId }: { projectId: n
     setSuccessMessage(null);
     setIsFunding(true);
     try {
-      const result = await fundProject(projectId, amountEth);
+      const result = await fundProject(projectId, projectDocId, amountEth);
       if (result.success) {
         setSuccessMessage(`Funding successful! Transaction Hash: ${result.transactionHash.slice(0, 10)}...`);
         setTimeout(() => handleCloseModal(), 3000); // Close modal after 3 seconds on success

@@ -25,7 +25,7 @@ const CONTRACT_ABI = [
 ];  
 
 // Function to interact with the smart contract and fund the project
-export const fundProject = async (projectId: number, amountEth: string) => {
+export const fundProject = async (projectId: number, projectDocId:string, amountEth: string) => {
   try {
     const provider = await getProvider();
     const signer = await provider.getSigner();
@@ -45,11 +45,12 @@ export const fundProject = async (projectId: number, amountEth: string) => {
     const receipt = await tx.wait(); // Wait for the transaction confirmation
 
     console.log(receipt);
-
+    console.log('firebaseid', projectDocId)
+    
     await saveFundingTransaction(
       receipt.hash,
       projectId,
-      "idv1cptGCY8IiBT55Joh",
+      projectDocId,
       amountEth
     );
 
@@ -73,7 +74,7 @@ export const fundProject = async (projectId: number, amountEth: string) => {
       throw new Error("Transaction failed due to unpredictable gas limit");
     }
 
-    throw new Error("Funding failed for an unknown reason. Please try again.");
+    throw new Error("Funding failed for an unknown reason. Check your wallet if the funds were deducted. If not, please try again.");
   }
 };
 
@@ -81,7 +82,7 @@ export const fundProject = async (projectId: number, amountEth: string) => {
 const saveFundingTransaction = async (
     transactionHash: string,
     fundingProjectId: number,
-    projectDocId: string = "idv1cptGCY8IiBT55Joh",
+    projectDocId: string,
     amountEth: string
     ) => {
     try {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FaFacebookF } from "react-icons/fa";
 import { TiSocialLinkedin } from "react-icons/ti";
@@ -9,10 +9,57 @@ import { MdEmail } from "react-icons/md";
 import { FaCopy } from "react-icons/fa6";
 import FundProjectBlockchainModal from './FundProjectBlockchainModal';
 import BlockchainTransactionHistoryModal from './BlockchainTransactionHistoryModal';
+import { ResearchProject } from '../../services/researchService2';
 
-const FundingSection = () => {
+interface FundingSectionProps {
+  project: ResearchProject;
+}
+
+const FundingSection: React.FC<FundingSectionProps> = ({ project }) => {
+
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+
   const [copied, setCopied] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('stripe');
+  const [researchProject, setResearchProject] = useState<ResearchProject | null>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [transactionHistoryFromFirestore, setTransactionHistoryFromFirestore] = useState<any[]>([]);
+  const [totalFunding, setTotalFunding] = useState(0);
+  const [totalFundingTransactions, setTotalFundingTransactions] = useState(0);
+
+  useEffect(() => {
+    setResearchProject(project);
+
+    const fetchTransactionHistory = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/research/projects/${project.id}/fundingtransactions`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch transaction history');
+        }
+        const data = await response.json();
+
+        setTotalFunding(data.totalFunding);
+
+        setTotalFundingTransactions(data.numberOfTransactions);
+        setTransactionHistoryFromFirestore(data.fundingTransactions);
+        setTransactionHistoryFromFirestore(data.data);
+
+        console.log('Transaction History:', data);
+        console.log('Total Funding:', data.totalFunding);
+        console.log('Number of Transactions:', data.numberOfTransactions);
+        console.log('Funding Transactions:', data.fundingTransactions);
+      }
+      catch (error) {
+        console.error('Error fetching transaction history:', error);
+      }
+    };
+    fetchTransactionHistory();
+
+
+  }, [project, API_BASE_URL]);
+
+  console.log('project:', project);
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -26,9 +73,7 @@ const FundingSection = () => {
   const handlePayment = () => {
     if (paymentMethod === 'stripe') {
       window.location.href = "https://buy.stripe.com/test_cN2dTTf5Z5cX5BC6oo";
-    } else {
-      window.location.href = "https://your-blockchain-payment-url.com";
-    }
+    } 
   };
 
   return (
@@ -37,24 +82,42 @@ const FundingSection = () => {
         <div className="mb-3">
           <h3 className="text-sm mb-1 text-[#1D2026]">Total Funding</h3>
           <div className="flex items-baseline">
-            <div className="text-xl font-medium text-[#1D2026]">$6,842</div>
-            <div className="text-sm text-gray-500 ml-2">Funding Goal of $8000</div>
+            <div className="text-xl font-medium text-[#1D2026]">
+              $ {totalFunding	}
+              </div>
+            <div className="text-sm text-gray-500 ml-2">Funding Goal of $ {researchProject?.fundingGoal}</div>
           </div>
         </div>
         
         <div className="mb-4">
           <div className="bg-gray-100 h-1 rounded-full overflow-hidden">
-            <div className="bg-green-500 h-full w-4/5"></div>
+            <div
+              className="h-full rounded-full"
+              style={{
+                width: `${Math.min((totalFunding / (researchProject?.fundingGoal || 1)) * 100, 100)}%`,
+                backgroundColor: '#16a34a'
+              }}
+            ></div>
           </div>
           <div className="flex justify-between mt-2">
-            <div className="text-green-600 text-xs font-medium">100% CROWDFUNDED</div>
+            <div
+              className="text-sm font-medium"
+              style={{
+              color: '#16a34a'
+              }}
+            >
+              {((totalFunding / (researchProject?.fundingGoal || 1)) * 100).toFixed(2)}% CROWDFUNDED
+              {totalFunding >= (researchProject?.fundingGoal || 0) ? ' - GOAL MET 🎉!' : ''}
+            </div>
           </div>
         </div>
         
         <div className="flex items-center mb-4">
           <Image src="/Users.svg" alt="People" width={24} height={24} className="rounded-full mr-2" />
-          <span className="text-sm text-gray-500">Funders</span>
-          <span className="ml-auto text-sm font-medium text-gray-500">29</span>
+          <span className="text-sm text-gray-500">Funding donations</span>
+          <span className="ml-auto text-sm font-medium text-gray-500">
+            {totalFundingTransactions}
+          </span>
         </div>
         
         <div className="mb-4">
@@ -97,7 +160,10 @@ const FundingSection = () => {
           </button>
         )} 
         {paymentMethod === 'blockchain' && (
-            <FundProjectBlockchainModal projectId={1} />  
+            <FundProjectBlockchainModal 
+              projectId={Number(researchProject?.onChainProjectId)}
+              projectDocId={researchProject?.id}
+            />  
         )}
 
 
@@ -108,7 +174,7 @@ const FundingSection = () => {
         </button>
 
         <div className='mt-3'>
-          <BlockchainTransactionHistoryModal projectId={1} />
+          <BlockchainTransactionHistoryModal projectId={Number(researchProject?.onChainProjectId)} />
         </div>
 
         
