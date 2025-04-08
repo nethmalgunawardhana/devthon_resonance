@@ -1,87 +1,91 @@
-# 🎯 Resonance Backend: Node.js for Stripe & Firestore
+🎯 Resonance Frontend: Next.js Application
+This is the Next.js frontend application for the Resonance project. It is a dynamic and responsive user interface built with Next.js and Tailwind CSS.
 
-This is the Node.js backend application for the Resonance project, designed to handle Stripe payment transactions and store related data in Firebase Firestore. It includes a secure Stripe webhook endpoint to automatically capture and log payment events.
+🚀 Features
+✅ Responsive and dynamic UI with Tailwind CSS
 
-## 🚀 Features
+🔍 AI-powered research recommendation system
 
--   ✅  Record Stripe payment transactions manually or via webhook
--   🔒  Secure Stripe webhook verification
--   🗃️  Store transactions in Firestore under `research/{projectDocId}/stripeTransactions`
--   📦  Built using plain Node.js
--   🔧  Environment variable support via `.env`
--   💽  LLM API (Gemini) for AI-powered research summarization and insights
--   🔍  Google Scholar for real-time research paper indexing
--    💰 Stripe integration for payments, donations, grant distribution
+🔗 Integration with backend APIs and blockchain-based smart contracts
 
-## 🛠️ Requirements
+🧠 LLM (Gemini) integration for summarization & recommendations
 
--   Node.js (v14 or above)
--   npm or yarn
--   Firebase Admin SDK service account key file (path to your JSON key)
--   Stripe account with webhook secret
+📄 OpenAlex and Arxiv integration for real-time research data
 
-## ⚙️ Setup Instructions
+👨‍🎓 User authentication (Email/Password & Google OAuth)
 
-1.  **Clone the Repository**
+🪙 Web3 integration with Metawallet for research funding
 
-    ```bash
-    git clone [https://github.com/nethmalgunawardhana/resonance_backend.git](https://github.com/nethmalgunawardhana/resonance_backend.git)
-    cd resonance_backend
-    ```
+🌐 Ethereum Sepolia testnet support and smart contract interaction
 
-2.  **Install Dependencies**
+🛠️ Requirements
+Node.js (v14 or above)
 
-    ```bash
-    npm install
-    # or
-    yarn install
-    ```
+npm or yarn
 
-3.  **Configure Environment Variables**
+⚙️ Setup Instructions
+Clone the Repository
 
-    Create a `.env` file in the root of the backend directory and add the following (replace with your actual values):
+bash
+Copy
+Edit
+git clone https://github.com/nethmalgunawardhana/resonance_backend.git
+cd resonance_backend/frontend
+Install Dependencies
 
-    ```
-    STRIPE_SECRET_KEY=sk_live_your_live_secret_key
-    STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
-    FIREBASE_SERVICE_ACCOUNT_PATH=/path/to/your/serviceAccountKey.json
-    GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-    # Add other necessary environment variables
-    ```
+bash
+Copy
+Edit
+npm install
+# or
+yarn install
+Configure Environment Variables
 
-    **Important:** Do not commit your `.env` file to version control. Add it to your `.gitignore` file.
+Create a .env.local file in the frontend directory:
 
-4.  **Run the Backend**
+env
+Copy
+Edit
+NEXT_PUBLIC_BACKEND_API_URL=http://localhost:3000/api
+NEXT_PUBLIC_INFURA_API_KEY=YOUR_INFURA_PROJECT_ID
+NEXT_PUBLIC_CONTRACT_ADDRESS=YOUR_SMART_CONTRACT_ADDRESS
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=YOUR_GOOGLE_CLIENT_ID
+Run the Application
 
-    ```bash
-    npm run start #  Or the script defined for starting the backend in your package.json
-    # or
-    node index.js
-    ```
+bash
+Copy
+Edit
+npm run dev
+# or
+yarn dev
+Then open http://localhost:3000 in your browser.
 
-    Refer to your `package.json` file for available scripts.  You might need to set up a start script.
+🚀 Deployment
+We recommend deploying to Vercel:
+https://vercel.com
 
-## ⚙️ Configuration
+💻 Tech Stack (Frontend)
+Framework: Next.js
 
--   **Stripe:** Ensure your Stripe webhook endpoint is configured to send relevant events to your backend's webhook URL.
--   **Firebase:** Make sure your Firebase Admin SDK is initialized correctly using the provided service account key.
--   **Gemini:** If using the LLM features, ensure your Gemini API key is correctly set in the `.env` file.
+Styling: Tailwind CSS
 
-## ---------- TECH STACK (Backend) ----------
+Auth: Firebase Auth, Google OAuth
 
-* Backend: Node.js
-* Database: Firebase Firestore
-* Payments: Stripe
-* AI/ML Integration: LLM API (Gemini)
-* Research Indexing: Google Scholar Integration
+Blockchain/Web3: Metawallet, Ethereum Sepolia Testnet
 
-## ---------- DEPLOYMENT ----------
-* Deployment & Scaling: Vercel (verify and update as needed)
+Smart Contracts: Solidity (ResearchFund)
 
-## ---------- TEAM MEMBERS ----------
+Data Integration: OpenAlex, Arxiv
 
-* Tharin Edirisinghe
-* Garuka Satharasinghe
-* Nethmal Gunawardhana
-* Harindu Hadithya
-* Sachintha Lakmin
+AI: LLM API (Gemini)
+
+🧑‍💻 Team Members
+Tharin Edirisinghe
+
+Garuka Satharasinghe
+
+Nethmal Gunawardhana
+
+Harindu Hadithya
+
+Sachintha Lakmin
