@@ -112,7 +112,7 @@ export default function Chatbot() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
-            className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800 focus:border-transparent"
+            className="flex-1 text-black p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-800 focus:border-transparent"
           />
           <button
             type="submit"

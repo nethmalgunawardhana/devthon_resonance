@@ -111,7 +111,7 @@ const ResearchView = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <FundingSection />
+            <FundingSection project={researchProject} />
           </motion.div>
         </div>
        
