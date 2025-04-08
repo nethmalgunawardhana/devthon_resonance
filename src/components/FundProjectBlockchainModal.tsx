@@ -3,7 +3,7 @@ import { fundProject, getEthereumObject } from "../../services/ethereumService";
 import Image from "next/image";
 import { AiOutlineWallet } from "react-icons/ai"; // Wallet icon
 
-export default function FundProjectModal({ projectId }: { projectId: number }) {
+export default function FundProjectBlockchainModal({ projectId }: { projectId: number }) {
   const [amountEth, setAmountEth] = useState("0.01");
   const [isFunding, setIsFunding] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,6 +30,7 @@ export default function FundProjectModal({ projectId }: { projectId: number }) {
         const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
         const data = await res.json();
         setEthPrice(data.ethereum.usd); // Set ETH price in USD
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setErrorMessage("Failed to fetch ETH price.");
       } finally {
@@ -70,6 +71,7 @@ export default function FundProjectModal({ projectId }: { projectId: number }) {
         setSuccessMessage(`Funding successful! Transaction Hash: ${result.transactionHash.slice(0, 10)}...`);
         setTimeout(() => handleCloseModal(), 3000); // Close modal after 3 seconds on success
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setErrorMessage(`${error.message}`);
     } finally {
@@ -97,6 +99,7 @@ export default function FundProjectModal({ projectId }: { projectId: number }) {
         if (accounts.length > 0) {
           setWalletAddress(accounts[0]);
         }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
       } catch (error: any) {
         setErrorMessage("Error connecting wallet. Please make sure MetaMask is installed and unlocked.");
       }
@@ -116,15 +119,15 @@ export default function FundProjectModal({ projectId }: { projectId: number }) {
     <div>
       <button
         onClick={handleOpenModal}
-        className="w-full bg-[#770C0C] text-white py-3 rounded-lg font-semibold hover:bg-[#5d0a0a] transition-all transform hover:scale-[1.02] shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed hover:cursor-pointer"
+        className="w-full bg-[#770C0C] text-white py-3 rounded-md font-medium mb-3 hover:bg-[#770C0C]/80 transition duration-200 ease-in-out"
       >
-        Fund Project
+        Fund This Research
       </button>
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <div className="w-full bg-white md:w-1/2 sm:w-3/4 lg:w-1/3 flex items-center justify-center p-8 space-y-6">
+        <div onClick={handleCloseModal} className="fixed inset-0 flex justify-center items-center bg-black/40 z-50">
+          <div onClick={(e) => e.stopPropagation()} className="w-full bg-white opacity-100 md:w-1/2 sm:w-3/4 lg:w-1/3 flex items-center justify-center p-8 space-y-6">
             <div className="w-full max-w-md space-y-6">
               <div className="text-center mb-4">
                 <div className="flex justify-center items-center space-x-2">

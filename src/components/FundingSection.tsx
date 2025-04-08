@@ -7,6 +7,8 @@ import { TiSocialLinkedin } from "react-icons/ti";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { FaCopy } from "react-icons/fa6";
+import FundProjectBlockchainModal from './FundProjectBlockchainModal';
+import BlockchainTransactionHistoryModal from './BlockchainTransactionHistoryModal';
 
 const FundingSection = () => {
   const [copied, setCopied] = useState(false);
@@ -78,23 +80,38 @@ const FundingSection = () => {
                 onChange={() => setPaymentMethod('blockchain')}
                 className="mr-2 accent-[#770C0C]"
               />
-              <span className="text-sm text-gray-700">Pay with Blockchain</span>
+              <span className="text-sm text-gray-700">
+                Pay using Ethereum Cryptocurrency
+              </span>
             </label>
           </div>
         </div>
-        
-        <button
-          onClick={handlePayment}
-          className="w-full bg-[#770C0C] text-white py-3 rounded-md font-medium mb-3
-                    hover:bg-[#770C0C]/80 transition duration-200 ease-in-out"
-        >
-          Fund This Research
-        </button>
+
+        {paymentMethod === 'stripe' && (
+          <button
+            onClick={handlePayment}
+            className="w-full bg-[#770C0C] text-white py-3 rounded-md font-medium mb-3
+                      hover:bg-[#770C0C]/80 transition duration-200 ease-in-out"
+          >
+            Fund This Research
+          </button>
+        )} 
+        {paymentMethod === 'blockchain' && (
+            <FundProjectBlockchainModal projectId={1} />  
+        )}
+
+
         
         <button className="w-full bg-gray-50 text-center font-semibold rounded-md text-sm text-gray-600 py-3
           border border-gray-200 hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:scale-95 transition">
-          View Fund Transactions
+          View All Fund Transactions
         </button>
+
+        <div className='mt-3'>
+          <BlockchainTransactionHistoryModal projectId={1} />
+        </div>
+
+        
       </div>
       
       <div className="mb-6">

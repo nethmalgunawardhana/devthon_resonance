@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import FundProjectModal from "../../../components/FundProjectModal"; 
-import TransactionHistoryModal from "@/components/TransactionHistoryModal";
+import FundProjectBlockchainModal from "../../../components/FundProjectBlockchainModal"; 
+import BlockchainTransactionHistoryModal from "@/components/BlockchainTransactionHistoryModal";
 
 export default function FundProjectPage() {
   const [projectId, setProjectId] = useState<number>(1); 
@@ -31,9 +31,9 @@ export default function FundProjectPage() {
         />
       </div>
 
-      <FundProjectModal projectId={projectId} />
+      <FundProjectBlockchainModal projectId={projectId} />
 
-      <TransactionHistoryModal projectId={projectId} />
+      <BlockchainTransactionHistoryModal projectId={projectId} />
     </div>
   );
 }

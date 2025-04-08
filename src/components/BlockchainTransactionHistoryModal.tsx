@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { AiOutlineHistory, AiOutlineCopy, AiOutlineCheck, AiOutlineLink } from "react-icons/ai";
+import {  AiOutlineCopy, AiOutlineCheck, AiOutlineLink } from "react-icons/ai";
 
 type Transaction = {
   projectId: string;
@@ -11,7 +11,7 @@ type Transaction = {
   timestamp: string;
 };
 
-export default function TransactionHistoryModal({ projectId }: { projectId: number }) {
+export default function BlockchainTransactionHistoryModal({ projectId }: { projectId: number }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,32 +62,32 @@ export default function TransactionHistoryModal({ projectId }: { projectId: numb
     <div>
       <button
         onClick={handleOpenModal}
-        className="bg-gray-600 text-white p-2 rounded flex items-center space-x-1"
+        className="w-full bg-gray-50 text-center font-semibold rounded-md text-sm text-gray-600 py-3
+        border border-gray-200 hover:bg-gray-100 hover:text-gray-800 active:bg-gray-200 active:scale-95 transition"
       >
-        <AiOutlineHistory />
-        <span>Transaction History</span>
+        <span>View Blockchain Transaction History</span>
       </button>
 
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <div className="w-full bg-white md:w-2/3 lg:w-1/2 flex items-center justify-center p-8 space-y-6">
+      {isModalOpen && (      
+        <div onClick={handleCloseModal} className="fixed inset-0 flex justify-center items-center bg-black/40 z-50">
+          <div onClick={(e) => e.stopPropagation()} className="w-full bg-white md:w-2/3 lg:w-1/2 flex items-center justify-center p-8 space-y-6">
             <div className="w-full max-w-2xl space-y-6">
               <div className="text-center mb-4">
                 <div className="flex justify-center items-center space-x-2">
-                  <Image
+                  {/* <Image
                     src="/ethereum-eth-logo.svg"
                     alt="Ethereum"
                     width={40}
                     height={40}
-                  />
-                  <p className="text-sm text-gray-500">Blockchain Transactions</p>
+                  /> */}
+                  {/* <p className="text-sm text-gray-500">Ethereum Blockchain Transactions</p> */}
                 </div>
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                  Project Transaction History
+                Ethereum Smart Contract Transaction History
                 </h2>
                 <p className="text-sm text-gray-500">
-                  All funding and withdrawal transactions for this project.
+                  Funding and withdrawal transactions for this project using the smart contract on Ethereum.
                 </p>
               </div>
 
