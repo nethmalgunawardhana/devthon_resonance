@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/footer";
 import { FaFacebookF } from "react-icons/fa";
@@ -15,7 +15,8 @@ import { getOpenAlexResearcher, OpenAlexResearcher } from "../../../services/ope
 import { fetchResearchProjectForResearcher, ResearchProject } from "../../../services/researchService2" 
 import ResearchCard from "@/components/ResearchCard";
 
-export default function ResearcherProfile() {
+// Client component that uses search params
+function ResearcherProfileContent() {
   const [activeTab, setActiveTab] = useState("researches");
   const [copied, setCopied] = useState(false);
   const [researcher, setResearcher] = useState<Researcher>();
@@ -61,7 +62,9 @@ export default function ResearcherProfile() {
       }
     };
 
-    loadData();
+    if (uid) {
+      loadData();
+    }
   }, [uid]);
 
   return (
@@ -186,35 +189,35 @@ export default function ResearcherProfile() {
                 </>}
                 {activeTab === "collaborations" && (
                   <>
-  {openAlexData?.works && openAlexData.works.length > 0 ? (
-    openAlexData.works.map((work, index) => (
-      <div
-        key={index}
-        className="w-full bg-white border border-gray-200 rounded-xl shadow-sm p-6 hover:shadow-md transition"
-      >
-        <h3 className="text-xl font-semibold text-[#1D2026] mb-2">{work.title}</h3>
-        
-        <div className="text-sm text-gray-600 space-y-1 mb-4">
-          <p><span className="font-medium text-gray-700">Authors:</span> {work.authors.join(", ")}</p>
-          <p><span className="font-medium text-gray-700">Published:</span> {new Date(work.publication_date).toLocaleDateString()}</p>
-          <p><span className="font-medium text-gray-700">Citations:</span> {work.citation_count}</p>
-          <p><span className="font-medium text-gray-700">Type:</span> {work.type}</p>
-        </div>
+                  {openAlexData?.works && openAlexData.works.length > 0 ? (
+                    openAlexData.works.map((work, index) => (
+                      <div
+                        key={index}
+                        className="w-full bg-white border border-gray-200 rounded-xl shadow-sm p-6 hover:shadow-md transition"
+                      >
+                        <h3 className="text-xl font-semibold text-[#1D2026] mb-2">{work.title}</h3>
+                        
+                        <div className="text-sm text-gray-600 space-y-1 mb-4">
+                          <p><span className="font-medium text-gray-700">Authors:</span> {work.authors.join(", ")}</p>
+                          <p><span className="font-medium text-gray-700">Published:</span> {new Date(work.publication_date).toLocaleDateString()}</p>
+                          <p><span className="font-medium text-gray-700">Citations:</span> {work.citation_count}</p>
+                          <p><span className="font-medium text-gray-700">Type:</span> {work.type}</p>
+                        </div>
 
-        <a
-          href={work.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-medium text-blue-600 hover:underline"
-        >
-          View Full Paper
-        </a>
-      </div>
-    ))
-  ) : (
-    <p>No published papers available yet.</p>
-  )}
-                </>
+                        <a
+                          href={work.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-blue-600 hover:underline"
+                        >
+                          View Full Paper
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No published papers available yet.</p>
+                  )}
+                  </>
                 )}
               </div>
             </div>
@@ -224,5 +227,14 @@ export default function ResearcherProfile() {
 
       <Footer />
     </div>
+  );
+}
+
+// Main component with suspense boundary
+export default function ResearcherProfile() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen text-gray-500">Loading profile...</div>}>
+      <ResearcherProfileContent />
+    </Suspense>
   );
 }
