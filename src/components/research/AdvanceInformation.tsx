@@ -8,6 +8,8 @@ interface AdvanceInfoProps {
     trailerVideo: File | null;
     description: string;
     keyInformation: string[];
+    isEthereumFundingEnabled: boolean;
+    ethereumAddress: string;
   };
   onChange: (data: any) => void;
   onSave: () => void;
@@ -30,6 +32,8 @@ const AdvanceInformation: React.FC<AdvanceInfoProps> = ({
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+  const [isEthEnabled, setIsEthEnabled] = useState(false); 
+  const [ethereumAddress, setEthereumAddress] = useState("");
 
   useEffect(() => {
     // Set initial state if data contains files
@@ -105,6 +109,19 @@ const AdvanceInformation: React.FC<AdvanceInfoProps> = ({
 
   const handleAddKeyInfo = () => {
     onChange({ keyInformation: [...data.keyInformation, ''] });
+  };
+
+  const handleEthToggle = () => {
+    setIsEthEnabled(!isEthEnabled); 
+    onChange({ isEthereumFundingEnabled: !isEthEnabled });
+    if (!isEthEnabled) {
+      setEthereumAddress('');
+    }
+  };
+
+  const handleEtherumAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEthereumAddress(e.target.value);
+    onChange({ ethereumAddress: e.target.value });
   };
 
   return (
@@ -296,6 +313,62 @@ const AdvanceInformation: React.FC<AdvanceInfoProps> = ({
             ))}
           </div>
         </div>
+
+        {/* Ethereum Address */}
+
+        <div>
+          <h3 className="text-base font-medium text-gray-700 mb-2">Funding through Ethereum Crypto Currency</h3>
+          <span className="text-sm text-gray-500 mb-2">
+            Ethereum funding option will use a secure smart contract that ensures transparency and direct funding to your project. This method guarantees that the funds are safely handled and distributed according to the terms.
+          </span>
+
+          
+          {/* Toggle for enabling/disabling ETH */}
+          <label className="flex items-center space-x-2 mt-2">
+            <input
+              type="checkbox"
+              checked={isEthEnabled}
+              onChange={handleEthToggle}
+              className="form-checkbox rounded-lg border-gray-300 transition duration-200 ease-in-out focus:ring-indigo-500"
+            />
+            <span className="text-sm  text-gray-700">Enable Ethereum for funding transactions</span>
+          </label>
+
+          {/* If ETH is enabled, show the address input */}
+          {isEthEnabled && (
+            <div className="mt-4 space-y-4">
+              {/* Warning Message */}
+              <div className="bg-red-50 border border-red-400 p-4 rounded-lg">
+                <div className="text-center">
+                  <span className="text-sm font-semibold text-red-700">
+                    Warning: This ethereum cannot be changed later. Funding will only be released by the smart contract to this Ethereum address.
+                  </span>
+                  <br />
+                  <strong className="text-red-800">
+                    Do not lose your private keys! Losing them will result in permanent loss of access to your ethereum funds.
+                  </strong>
+                </div>
+              </div>
+
+              {/* Ethereum Address Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-800 mb-2">
+                Enter your Ethereum address ( Address should start with 0x )
+                </label>
+                <input
+                  value={ethereumAddress}
+                  onChange={handleEtherumAddressChange}
+                  className="w-full px-4 py-2 text-black border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Enter your Ethereum address"
+                />
+                <div id="ethErrorMsg" className="mt-2 text-red-600 text-sm"></div>
+              </div>
+            </div>
+          )}
+
+        </div>
+
+
 
         <div className="flex justify-between pt-4">
           <button

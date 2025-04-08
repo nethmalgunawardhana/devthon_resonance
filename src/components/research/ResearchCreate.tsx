@@ -20,6 +20,8 @@ export type ResearchFormData = {
     trailerVideo: File | null;
     description: string;
     keyInformation: string[];
+    isEthereumFundingEnabled: boolean;
+    ethereumAddress: string;
   };
   collaborativeInfo: {
     allowCollaboratorRequests: boolean;
@@ -51,6 +53,8 @@ const ResearchCreate: React.FC = () => {
       trailerVideo: null,
       description: '',
       keyInformation: ['', '', ''],
+      isEthereumFundingEnabled: false,
+      ethereumAddress: '',
     },
     collaborativeInfo: {
       allowCollaboratorRequests: true,
