@@ -1,5 +1,5 @@
 'use client';
-
+import React from 'react';
 import { useState, useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import Navbar from '@/components/Navbar';
@@ -12,7 +12,7 @@ export default function Contact() {
   const [notificationType, setNotificationType] = useState('success'); 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const sendEmail = (e) => {
+  const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
