@@ -21,7 +21,7 @@ export interface ResearchProject {
 
 export const fetchResearchProjects = async (searchQuery: string): Promise<ResearchProject[]> => {
   try {
-    const response = await fetch(`http://localhost:5000/api/research/projects/category/${searchQuery}`); 
+    const response = await fetch(`https://resonance-backend.vercel.app/api/research/projects/category/${searchQuery}`); 
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -38,7 +38,7 @@ export const fetchResearchProjects = async (searchQuery: string): Promise<Resear
 
 export const fetchResearchProjectById = async (id: string): Promise<ResearchProject> => {
   try {
-    const res = await fetch(`http://localhost:5000/api/research/projects/${id}`);
+    const res = await fetch(`https://resonance-backend.vercel.app/api/research/projects/${id}`);
     if (!res.ok) {
       throw new Error(`Failed to fetch project with id: ${id}`);
     }
@@ -52,7 +52,7 @@ export const fetchResearchProjectById = async (id: string): Promise<ResearchProj
 
 export const fetchTrendingResearchProjects = async (): Promise<ResearchProject[]> => {
   try {
-    const response = await fetch(`http://localhost:5000/api/research/projects/trending`); 
+    const response = await fetch(`https://resonance-backend.vercel.app/api/research/projects/trending`); 
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -67,7 +67,7 @@ export const fetchTrendingResearchProjects = async (): Promise<ResearchProject[]
 
 export const fetchResearchProjectForResearcher = async (id: string): Promise<ResearchProject[]> => {
   try {
-    const response = await fetch(`http://localhost:5000/api/local-papers/${id}`); 
+    const response = await fetch(`https://resonance-backend.vercel.app/api/local-papers/${id}`); 
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

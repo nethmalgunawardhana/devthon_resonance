@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ResearchFormData } from '../src/components/research/ResearchCreate';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://resonance-backend.vercel.app/api';
 
 export const researchService = {
   async createResearch(data: ResearchFormData): Promise<any> {
