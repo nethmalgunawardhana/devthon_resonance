@@ -20,7 +20,7 @@ This is the **Next.js frontend application** for the Resonance project, providin
 ## 🔗 Links
 
 - **Live Website**: [Click here](https://your-live-website-url.com)  
-- **Backend Repository**: [Repo Link]([https://github.com/yourusername/resonance_backend](https://github.com/nethmalgunawardhana/resonance_backend.git))    
+- **Backend Repository**: [Repo Link](https://github.com/nethmalgunawardhana/resonance_backend.git)    
 
 ---
 
