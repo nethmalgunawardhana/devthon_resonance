@@ -6,15 +6,15 @@ This is the **Next.js frontend application** for the Resonance project, providin
 
 ## 🚀 Features
 
-- ✅ Responsive and dynamic UI with Tailwind CSS  
+- 🪙 Web3 integration with Metawallet for research funding 
+- 🌐 Ethereum Sepolia testnet support and smart contract interaction 
 - 🔍 AI-powered research recommendation system  
 - 🔗 Integration with backend APIs and blockchain-based smart contracts  
 - 🧠 LLM (Gemini) integration for summarization & recommendations  
 - 📄 OpenAlex and Arxiv integration for real-time research data  
 - 👨‍🎓 User authentication (Email/Password & Google OAuth)  
-- 🪙 Web3 integration with Metawallet for research funding  
-- 🌐 Ethereum Sepolia testnet support and smart contract interaction  
-
+- ✅ Responsive and dynamic UI with Tailwind CSS 
+ 
 ---
 
 ## 🔗 Links
